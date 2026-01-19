@@ -4,6 +4,7 @@ import Hero from './components/Sections/Hero';
 import About from './components/Sections/About';
 import Experience from './components/Sections/Experience';
 import Projects from './components/Sections/Projects';
+import Instagram from './components/Sections/Instagram';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
 
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         <About />
         <Experience />
         <Projects />
+        <Instagram />
       </main>
       <Footer />
       <ChatWidget />

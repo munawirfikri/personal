@@ -4,7 +4,7 @@ import { PROJECTS } from '../../constants';
 
 const Projects: React.FC = () => {
   return (
-    <section id={SectionId.PROJECTS} className="py-24 bg-surface">
+    <section id={SectionId.PROJECTS} className="py-24 bg-surface scroll-mt-28">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
            <h2 className="text-3xl md:text-4xl font-bold text-white">Featured Projects</h2>

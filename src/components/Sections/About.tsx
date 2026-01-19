@@ -4,7 +4,7 @@ import { PROFILE, SKILLS } from '../../constants';
 
 const About: React.FC = () => {
   return (
-    <section id={SectionId.ABOUT} className="py-24 bg-surface relative overflow-hidden">
+    <section id={SectionId.ABOUT} className="py-24 bg-surface relative overflow-hidden scroll-mt-28">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           
