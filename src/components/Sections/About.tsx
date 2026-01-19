@@ -44,7 +44,7 @@ const About: React.FC = () => {
               {/* Floating Text */}
               <div className="absolute bottom-0 left-0 right-0 p-8 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                  <p className="font-mono text-xs opacity-80 uppercase tracking-widest mb-2 border-l-2 border-white pl-3">Software Engineer</p>
-                 <p className="text-2xl font-bold leading-tight">Munawir Fikri Al-Akbari</p>
+                 <p className="text-2xl font-bold leading-tight">Munawir Fikri</p>
               </div>
             </div>
             
