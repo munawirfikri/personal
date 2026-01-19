@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { SectionId } from '../../types';
-import { PROFILE } from '../../constants';
+import { useData } from '../../contexts/DataContext';
 
 const Hero: React.FC = () => {
+  const { profile } = useData();
   const [scrollY, setScrollY] = useState(0);
   
   // Typewriter State
@@ -35,13 +36,13 @@ const Hero: React.FC = () => {
     }
 
     setGreetings([
-      `${id}, Saya Fikri.`,   // Indonesia
-      `${my}, Saye Fikri.`,   // Melayu (Riau dialect nuance)
-      `${en}, I'm Fikri.`     // English
+      `${id}, Saya ${profile.name.split(' ')[1]}.`,   // Dynamic last name usage
+      `${my}, Saye ${profile.name.split(' ')[1]}.`, 
+      `${en}, I'm ${profile.name.split(' ')[1]}.`
     ]);
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [profile.name]);
 
   // Typewriter Effect Logic
   useEffect(() => {
@@ -102,17 +103,17 @@ const Hero: React.FC = () => {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
               <span className="text-xs font-mono font-medium text-secondary uppercase tracking-wider">
-                Based in {PROFILE.location.split(',')[0]}
+                Based in {profile.location.split(',')[0]}
               </span>
             </div>
             
             <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-6 animate-slide-up text-primary leading-[1.1]">
-              Munawir <br />
-              <span className="text-secondary/60">Fikri</span>
+              {profile.name.split(' ')[0]} <br />
+              <span className="text-secondary/60">{profile.name.split(' ').slice(1).join(' ')}</span>
             </h1>
             
             <p className="text-lg md:text-xl text-secondary max-w-lg mb-8 leading-relaxed animate-slide-up mx-auto md:mx-0" style={{animationDelay: '0.1s'}}>
-              {PROFILE.tagline}
+              {profile.tagline}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start animate-slide-up" style={{animationDelay: '0.2s'}}>

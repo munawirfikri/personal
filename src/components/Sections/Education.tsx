@@ -1,8 +1,10 @@
 import React from 'react';
 import { SectionId } from '../../types';
-import { EDUCATION } from '../../constants';
+import { useData } from '../../contexts/DataContext';
 
 const Education: React.FC = () => {
+  const { education } = useData();
+
   return (
     <section id={SectionId.EDUCATION} className="py-24 bg-surfaceHighlight scroll-mt-28 relative overflow-hidden">
       {/* Background Decorative Elements */}
@@ -16,7 +18,7 @@ const Education: React.FC = () => {
         <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center text-primary">Education</h2>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {EDUCATION.map((edu, index) => (
+          {education.map((edu, index) => (
             <div 
               key={edu.id}
               className="bg-background border border-border rounded-xl p-8 hover:border-secondary transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl hover:shadow-primary/5 flex flex-col relative overflow-hidden group"

@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
-import { SOCIALS, PROFILE } from '../constants';
+import { useData } from '../contexts/DataContext';
 import { SectionId } from '../types';
 
 const Footer: React.FC = () => {
+  const { profile, socials } = useData();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -82,15 +83,15 @@ const Footer: React.FC = () => {
                 <div className="space-y-8">
                     <div>
                         <h4 className="text-sm font-bold uppercase tracking-wider text-secondary mb-2">Email</h4>
-                        <a href={`mailto:${PROFILE.email}`} className="text-xl text-primary hover:underline decoration-secondary underline-offset-4 break-all">
-                            {PROFILE.email}
+                        <a href={`mailto:${profile.email}`} className="text-xl text-primary hover:underline decoration-secondary underline-offset-4 break-all">
+                            {profile.email}
                         </a>
                     </div>
                     
                     <div>
                         <h4 className="text-sm font-bold uppercase tracking-wider text-secondary mb-3">Socials</h4>
                         <div className="flex gap-4">
-                            {SOCIALS.map(social => (
+                            {socials.map(social => (
                             <a 
                                 key={social.platform} 
                                 href={social.url} 
