@@ -7,6 +7,17 @@ export interface Experience {
   technologies: string[];
 }
 
+export interface Education {
+  id: string;
+  school: string;
+  degree: string;
+  field: string;
+  year: string;
+  gpa?: string;
+  description?: string;
+  logoUrl?: string; // Optional logo placeholder
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -41,6 +52,7 @@ export enum SectionId {
   HERO = 'home',
   ABOUT = 'about',
   EXPERIENCE = 'experience',
+  EDUCATION = 'education',
   PROJECTS = 'projects',
   INSTAGRAM = 'instagram',
   CONTACT = 'contact',

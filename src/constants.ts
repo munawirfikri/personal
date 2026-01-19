@@ -1,4 +1,4 @@
-import { Experience, Project, Skill, SocialLink } from './types';
+import { Experience, Project, Skill, SocialLink, Education } from './types';
 
 // NOTE: This data serves as the knowledge base for the website AND the AI Assistant.
 
@@ -52,6 +52,27 @@ export const EXPERIENCES: Experience[] = [
     period: "Jan 2020 – July 2022",
     description: "Developed the Academic Information System (Portal Akademik) and the Admission System (PMB).",
     technologies: ["Full Stack Development", "Academic Systems", "Web Development"]
+  }
+];
+
+export const EDUCATION: Education[] = [
+  {
+    id: 'edu1',
+    school: "Universitas Budi Luhur",
+    degree: "Master of Computer Science",
+    field: "Computer Science",
+    year: "2022 - 2024",
+    gpa: "3.70/4.00",
+    description: "Advanced studies in computer science algorithms, software engineering patterns, and research methodology."
+  },
+  {
+    id: 'edu2',
+    school: "Universitas Riau",
+    degree: "Bachelor of Informatics Engineering",
+    field: "Informatics Engineering",
+    year: "2018 - 2022",
+    gpa: "3.64/4.00",
+    description: "Active in student organizations including Google Developer Student Clubs. Focused on web development and backend technologies."
   }
 ];
 

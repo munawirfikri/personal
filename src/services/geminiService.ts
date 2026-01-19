@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { PROFILE, EXPERIENCES, PROJECTS, SKILLS } from '../constants';
+import { PROFILE, EXPERIENCES, PROJECTS, SKILLS, EDUCATION } from '../constants';
 
 // This service is used to power the "Ask about Munawir" feature.
 
@@ -15,6 +15,7 @@ Context about Munawir Fikri:
 - About: ${PROFILE.about}
 - Contact Email: ${PROFILE.email}
 - Experience: ${JSON.stringify(EXPERIENCES)}
+- Education: ${JSON.stringify(EDUCATION)}
 - Projects: ${JSON.stringify(PROJECTS)}
 - Skills: ${JSON.stringify(SKILLS)}
 

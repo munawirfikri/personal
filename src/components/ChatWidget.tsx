@@ -45,8 +45,8 @@ const ChatWidget: React.FC = () => {
       {isOpen && (
         <div className="mb-4 w-80 md:w-96 bg-surfaceHighlight border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden animate-slide-up h-[400px]">
           <div className="p-4 border-b border-border bg-background flex justify-between items-center">
-            <h3 className="font-semibold text-sm text-white">Mun's AI Assistant</h3>
-            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white">
+            <h3 className="font-semibold text-sm text-primary">Mun's AI Assistant</h3>
+            <button onClick={() => setIsOpen(false)} className="text-secondary hover:text-primary">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -59,8 +59,8 @@ const ChatWidget: React.FC = () => {
                 <div 
                   className={`max-w-[80%] p-3 rounded-lg text-sm ${
                     msg.role === 'user' 
-                      ? 'bg-white text-black rounded-tr-none' 
-                      : 'bg-background border border-border text-gray-300 rounded-tl-none'
+                      ? 'bg-primary text-background rounded-tr-none' 
+                      : 'bg-background border border-border text-primary rounded-tl-none'
                   }`}
                 >
                   {msg.text}
@@ -71,9 +71,9 @@ const ChatWidget: React.FC = () => {
               <div className="flex justify-start">
                  <div className="bg-background border border-border p-3 rounded-lg rounded-tl-none">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
+                      <div className="w-2 h-2 bg-secondary rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                      <div className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
                     </div>
                  </div>
               </div>
@@ -88,12 +88,12 @@ const ChatWidget: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about my skills..."
-                className="flex-1 bg-surfaceHighlight border border-border rounded px-3 py-2 text-sm focus:outline-none focus:border-white transition-colors text-white placeholder-gray-500"
+                className="flex-1 bg-surfaceHighlight border border-border rounded px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors text-primary placeholder-gray-500"
               />
               <button 
                 type="submit" 
                 disabled={isLoading}
-                className="bg-white text-black p-2 rounded hover:bg-gray-200 transition-colors disabled:opacity-50"
+                className="bg-primary text-background p-2 rounded hover:opacity-80 transition-opacity disabled:opacity-50"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -107,7 +107,7 @@ const ChatWidget: React.FC = () => {
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-white text-black rounded-full shadow-lg shadow-white/10 flex items-center justify-center hover:scale-110 transition-transform duration-300"
+        className="w-14 h-14 bg-primary text-background rounded-full shadow-lg shadow-primary/20 flex items-center justify-center hover:scale-110 transition-transform duration-300"
         aria-label="Toggle Chat"
       >
         {isOpen ? (
