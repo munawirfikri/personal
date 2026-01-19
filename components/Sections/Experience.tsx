@@ -1,15 +1,17 @@
 import React from 'react';
 import { SectionId } from '../../types';
-import { EXPERIENCES } from '../../constants';
+import { useData } from '../../contexts/DataContext';
 
 const Experience: React.FC = () => {
+  const { experiences } = useData();
+
   return (
     <section id={SectionId.EXPERIENCE} className="py-24 bg-background scroll-mt-28">
       <div className="container mx-auto px-6 max-w-4xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center text-primary">Work Experience</h2>
         
         <div className="flex flex-col">
-          {EXPERIENCES.map((exp, index) => (
+          {experiences.map((exp, index) => (
             <div 
               key={exp.id} 
               className="relative pl-8 md:pl-0 group pb-12 last:pb-0 animate-fade-in"
@@ -22,7 +24,7 @@ const Experience: React.FC = () => {
                       <div className="absolute top-0 h-8 w-full border-l-2 border-dashed border-primary/20 shadow-[0_0_8px_rgba(var(--color-primary),0.1)]"></div>
                   )}
                   {/* Lower segment (connects to next) - Only if not last */}
-                  {index !== EXPERIENCES.length - 1 && (
+                  {index !== experiences.length - 1 && (
                       <div className="absolute top-8 bottom-0 w-full border-l-2 border-dashed border-primary/20 shadow-[0_0_8px_rgba(var(--color-primary),0.1)]"></div>
                   )}
               </div>

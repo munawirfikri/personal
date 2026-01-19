@@ -1,8 +1,10 @@
 import React from 'react';
 import { SectionId } from '../../types';
-import { PROJECTS } from '../../constants';
+import { useData } from '../../contexts/DataContext';
 
 const Projects: React.FC = () => {
+  const { projects } = useData();
+
   return (
     <section id={SectionId.PROJECTS} className="py-24 bg-surface scroll-mt-28">
       <div className="container mx-auto px-6">
@@ -12,7 +14,7 @@ const Projects: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {PROJECTS.map((project) => (
+          {projects.map((project) => (
             <div 
               key={project.id} 
               className="group relative bg-surfaceHighlight border border-border rounded-xl overflow-hidden hover:border-secondary transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-xl hover:shadow-primary/5"
