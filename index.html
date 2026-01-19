@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,13 +43,15 @@
               mono: ['JetBrains Mono', 'monospace'],
             },
             colors: {
-              background: '#050505',    /* Very Dark Gray/Black */
-              surface: '#0a0a0a',       /* Slightly lighter black */
-              surfaceHighlight: '#171717', /* Dark Gray for cards */
-              border: '#262626',        /* Subtle border */
-              primary: '#e5e5e5',       /* High contrast text (Off-white) */
-              secondary: '#a3a3a3',     /* Muted text */
-              accent: '#ffffff',        /* Pure white for emphasis */
+              background: 'rgba(var(--color-background), <alpha-value>)',
+              surface: 'rgba(var(--color-surface), <alpha-value>)',
+              surfaceHighlight: 'rgba(var(--color-surface-highlight), <alpha-value>)',
+              border: 'rgba(var(--color-border), <alpha-value>)',
+              primary: 'rgba(var(--color-primary), <alpha-value>)',
+              secondary: 'rgba(var(--color-secondary), <alpha-value>)',
+              accent: 'rgba(var(--color-accent), <alpha-value>)',
+              // Specific overrides for button text/bg inversion
+              btnText: 'rgba(var(--color-btn-text), <alpha-value>)',
             },
             animation: {
               'fade-in': 'fadeIn 0.5s ease-out forwards',
@@ -107,24 +109,52 @@
     </script>
     
     <style>
-      body {
-        background-color: #050505;
-        color: #e5e5e5;
-        scroll-behavior: smooth;
+      /* Define CSS Variables for Theming */
+      :root {
+        /* LIGHT MODE COLORS */
+        --color-background: 249, 250, 251; /* gray-50 (#f9fafb) */
+        --color-surface: 255, 255, 255;     /* white (#ffffff) */
+        --color-surface-highlight: 243, 244, 246; /* gray-100 (#f3f4f6) */
+        --color-border: 229, 231, 235;      /* gray-200 (#e5e7eb) */
+        --color-primary: 23, 23, 23;        /* neutral-900 (#171717) - Text color */
+        --color-secondary: 75, 85, 99;      /* gray-600 (#4b5563) - Muted text */
+        --color-accent: 0, 0, 0;            /* black (#000000) */
+        --color-btn-text: 255, 255, 255;    /* Text inside primary buttons */
       }
+
+      .dark {
+        /* DARK MODE COLORS */
+        --color-background: 5, 5, 5;        /* Very Dark Gray/Black (#050505) */
+        --color-surface: 10, 10, 10;        /* Slightly lighter black (#0a0a0a) */
+        --color-surface-highlight: 23, 23, 23; /* Dark Gray for cards (#171717) */
+        --color-border: 38, 38, 38;         /* Subtle border (#262626) */
+        --color-primary: 229, 229, 229;     /* High contrast text (#e5e5e5) */
+        --color-secondary: 163, 163, 163;   /* Muted text (#a3a3a3) */
+        --color-accent: 255, 255, 255;      /* Pure white (#ffffff) */
+        --color-btn-text: 0, 0, 0;          /* Text inside primary buttons */
+      }
+
+      body {
+        /* Use Tailwind variable */
+        background-color: rgb(var(--color-background));
+        color: rgb(var(--color-primary));
+        scroll-behavior: smooth;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #0a0a0a; 
+        background: rgb(var(--color-surface)); 
       }
       ::-webkit-scrollbar-thumb {
-        background: #333; 
+        background: rgb(var(--color-border)); 
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #555; 
+        background: rgb(var(--color-secondary)); 
       }
     </style>
   <script type="importmap">

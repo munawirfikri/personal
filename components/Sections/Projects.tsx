@@ -7,7 +7,7 @@ const Projects: React.FC = () => {
     <section id={SectionId.PROJECTS} className="py-24 bg-surface scroll-mt-28">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-           <h2 className="text-3xl md:text-4xl font-bold text-white">Featured Projects</h2>
+           <h2 className="text-3xl md:text-4xl font-bold text-primary">Featured Projects</h2>
            <p className="text-secondary mt-4 md:mt-0">Some things I've built.</p>
         </div>
 
@@ -15,7 +15,7 @@ const Projects: React.FC = () => {
           {PROJECTS.map((project) => (
             <div 
               key={project.id} 
-              className="group relative bg-surfaceHighlight border border-border rounded-xl overflow-hidden hover:border-gray-500 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-xl hover:shadow-white/10"
+              className="group relative bg-surfaceHighlight border border-border rounded-xl overflow-hidden hover:border-secondary transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-xl hover:shadow-primary/5"
             >
               <div className="aspect-video w-full overflow-hidden relative">
                 <img 
@@ -27,14 +27,14 @@ const Projects: React.FC = () => {
               </div>
               
               <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-white group-hover:text-white transition-colors">{project.title}</h3>
+                <h3 className="text-xl font-bold mb-2 text-primary transition-colors">{project.title}</h3>
                 <p className="text-sm text-secondary mb-4 line-clamp-3">
                   {project.description}
                 </p>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.tags.map(tag => (
-                    <span key={tag} className="text-[10px] uppercase tracking-wider px-2 py-1 border border-border bg-black/30 rounded text-gray-400">
+                    <span key={tag} className="text-[10px] uppercase tracking-wider px-2 py-1 border border-border bg-background/50 rounded text-secondary">
                       {tag}
                     </span>
                   ))}
@@ -42,12 +42,12 @@ const Projects: React.FC = () => {
 
                 <div className="flex gap-4">
                   {project.link && (
-                    <a href={project.link} className="text-sm font-semibold hover:underline decoration-white underline-offset-4 text-white">
+                    <a href={project.link} className="text-sm font-semibold hover:underline decoration-primary underline-offset-4 text-primary">
                       Live Demo
                     </a>
                   )}
                   {project.github && (
-                     <a href={project.github} className="text-sm font-semibold hover:underline decoration-white underline-offset-4 text-white">
+                     <a href={project.github} className="text-sm font-semibold hover:underline decoration-primary underline-offset-4 text-primary">
                       GitHub
                     </a>
                   )}
