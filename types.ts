@@ -28,10 +28,20 @@ export interface SocialLink {
   icon: string; // SVG path or identifier
 }
 
+export interface InstagramMedia {
+  id: string;
+  caption: string;
+  media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
+  media_url: string;
+  thumbnail_url?: string;
+  permalink: string;
+}
+
 export enum SectionId {
   HERO = 'home',
   ABOUT = 'about',
   EXPERIENCE = 'experience',
   PROJECTS = 'projects',
+  INSTAGRAM = 'instagram',
   CONTACT = 'contact',
 }

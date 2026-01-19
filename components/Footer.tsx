@@ -67,8 +67,8 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer id={SectionId.CONTACT} className="py-24 border-t border-border bg-background relative overflow-hidden">
-      <div className="container mx-auto px-6">
+    <footer id={SectionId.CONTACT} className="pt-24 pb-32 md:pb-24 border-t border-border bg-background relative overflow-hidden scroll-mt-28">
+      <div className="container mx-auto px-4 md:px-6">
         
         <div className="grid md:grid-cols-2 gap-12 lg:gap-24 mb-20">
             {/* Contact Info */}
@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
                 <div className="space-y-8">
                     <div>
                         <h4 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-2">Email</h4>
-                        <a href={`mailto:${PROFILE.email}`} className="text-xl text-white hover:underline decoration-gray-500 underline-offset-4">
+                        <a href={`mailto:${PROFILE.email}`} className="text-xl text-white hover:underline decoration-gray-500 underline-offset-4 break-all">
                             {PROFILE.email}
                         </a>
                     </div>
@@ -110,7 +110,7 @@ const Footer: React.FC = () => {
             </div>
 
             {/* Contact Form */}
-            <div className="order-1 md:order-2 bg-surfaceHighlight p-8 rounded-2xl border border-border shadow-2xl relative">
+            <div className="order-1 md:order-2 bg-surfaceHighlight p-5 md:p-8 rounded-2xl border border-border shadow-2xl relative">
                 <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Name</label>
@@ -156,12 +156,14 @@ const Footer: React.FC = () => {
 
                     {/* ReCAPTCHA */}
                     <div className="flex flex-col">
-                        <ReCAPTCHA
-                            ref={recaptchaRef}
-                            sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // Google Test Site Key
-                            onChange={handleCaptchaChange}
-                            theme="dark"
-                        />
+                        <div className="transform scale-[0.85] origin-top-left md:scale-100 sm:scale-100">
+                          <ReCAPTCHA
+                              ref={recaptchaRef}
+                              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // Google Test Site Key
+                              onChange={handleCaptchaChange}
+                              theme="dark"
+                          />
+                        </div>
                         {errors.captcha && <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.captcha}</p>}
                     </div>
 

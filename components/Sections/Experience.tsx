@@ -4,7 +4,7 @@ import { EXPERIENCES } from '../../constants';
 
 const Experience: React.FC = () => {
   return (
-    <section id={SectionId.EXPERIENCE} className="py-24 bg-background">
+    <section id={SectionId.EXPERIENCE} className="py-24 bg-background scroll-mt-28">
       <div className="container mx-auto px-6 max-w-4xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center text-white">Work Experience</h2>
         
