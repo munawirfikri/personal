@@ -34,7 +34,7 @@ const About: React.FC = () => {
             <div className="aspect-[3/4] md:aspect-square rounded-2xl overflow-hidden bg-surfaceHighlight border border-border relative group shadow-2xl transition-all duration-500 hover:shadow-xl hover:shadow-white/5">
               <img 
                 src="/profile.jpg" 
-                alt="Munawir Fikri Al-Akbari" 
+                alt="Munawir Fikri" 
                 className="object-cover object-top w-full h-full transition-transform duration-700 group-hover:scale-105 filter grayscale hover:grayscale-0"
               />
               
@@ -44,7 +44,7 @@ const About: React.FC = () => {
               {/* Floating Text */}
               <div className="absolute bottom-0 left-0 right-0 p-8 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                  <p className="font-mono text-xs opacity-80 uppercase tracking-widest mb-2 border-l-2 border-white pl-3">Software Engineer</p>
-                 <p className="text-2xl font-bold leading-tight">Munawir Fikri Al-Akbari</p>
+                 <p className="text-2xl font-bold leading-tight">Munawir Fikri</p>
               </div>
             </div>
             

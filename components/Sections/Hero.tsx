@@ -4,14 +4,77 @@ import { PROFILE } from '../../constants';
 
 const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
+  
+  // Typewriter State
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [delta, setDelta] = useState(100);
+  const [greetings, setGreetings] = useState<string[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    // Set greetings based on time of day
+    const hour = new Date().getHours();
+    let id = "Halo";
+    let my = "Hai";
+    let en = "Hello";
+
+    if (hour >= 5 && hour < 12) {
+      id = "Selamat Pagi"; my = "Selamat Pagi"; en = "Good Morning";
+    } else if (hour >= 12 && hour < 15) {
+      id = "Selamat Siang"; my = "Selamat Tengahari"; en = "Good Afternoon";
+    } else if (hour >= 15 && hour < 18) {
+      id = "Selamat Sore"; my = "Selamat Petang"; en = "Good Afternoon";
+    } else {
+      id = "Selamat Malam"; my = "Selamat Malam"; en = "Good Evening";
+    }
+
+    setGreetings([
+      `${id}, Saya Fikri.`,   // Indonesia
+      `${my}, Saye Fikri.`,   // Melayu (Riau dialect nuance)
+      `${en}, I'm Fikri.`     // English
+    ]);
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Typewriter Effect Logic
+  useEffect(() => {
+    if (greetings.length === 0) return;
+
+    const tick = () => {
+      let i = loopNum % greetings.length;
+      let fullText = greetings[i];
+      let updatedText = isDeleting 
+        ? fullText.substring(0, text.length - 1) 
+        : fullText.substring(0, text.length + 1);
+
+      setText(updatedText);
+
+      if (isDeleting) {
+        setDelta(50); // Faster deleting
+      } else {
+        setDelta(100); // Normal typing
+      }
+
+      if (!isDeleting && updatedText === fullText) {
+        setDelta(2000); // Wait before deleting
+        setIsDeleting(true);
+      } else if (isDeleting && updatedText === '') {
+        setIsDeleting(false);
+        setLoopNum(loopNum + 1);
+        setDelta(500); // Wait before typing next
+      }
+    };
+
+    let ticker = setTimeout(tick, delta);
+    return () => clearTimeout(ticker);
+  }, [text, delta, isDeleting, loopNum, greetings]);
 
   return (
     <section 
@@ -44,7 +107,7 @@ const Hero: React.FC = () => {
             
             <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-6 animate-slide-up text-white leading-[1.1]">
               Munawir <br />
-              <span className="text-gray-500">Fikri</span> <span className="text-white">Al-Akbari</span>
+              <span className="text-gray-500">Fikri</span>
             </h1>
             
             <p className="text-lg md:text-xl text-secondary max-w-lg mb-8 leading-relaxed animate-slide-up mx-auto md:mx-0" style={{animationDelay: '0.1s'}}>
@@ -72,9 +135,10 @@ const Hero: React.FC = () => {
 
           {/* Image Side - Near Typography with Parallax */}
           <div 
-            className="flex-1 order-1 md:order-2 flex justify-center md:justify-end animate-fade-in"
+            className="flex-1 order-1 md:order-2 flex flex-col items-center md:items-end animate-fade-in"
             style={{ transform: `translateY(${scrollY * 0.12}px)` }}
           >
+            {/* Image Wrapper */}
             <div className="relative w-72 h-72 md:w-[450px] md:h-[550px] group">
               {/* Abstract Shape Background */}
               <div className="absolute inset-0 bg-surfaceHighlight rounded-[2rem] transform rotate-6 transition-transform duration-500 group-hover:rotate-3 group-hover:scale-105 border border-border/50"></div>
@@ -103,6 +167,16 @@ const Hero: React.FC = () => {
                 <p className="font-bold text-white leading-tight">Backend & Scalable Systems</p>
               </div>
             </div>
+
+            {/* Typewriter Greeting - Below the photo */}
+            {/* data-nosnippet ensures this dynamic text doesn't appear in Google Search snippets */}
+            <div className="mt-8 md:mr-4 h-8 flex items-center justify-end gap-3 min-w-[280px]" data-nosnippet>
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+              <span className="font-mono text-lg md:text-xl text-primary font-medium tracking-tight">
+                {text}<span className="animate-blink ml-1 border-r-2 border-primary h-5 inline-block align-middle"></span>
+              </span>
+            </div>
+
           </div>
 
         </div>
