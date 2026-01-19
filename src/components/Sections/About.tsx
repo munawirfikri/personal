@@ -33,7 +33,7 @@ const About: React.FC = () => {
             {/* Image Container */}
             <div className="aspect-[3/4] md:aspect-square rounded-2xl overflow-hidden bg-surfaceHighlight border border-border relative group shadow-2xl transition-all duration-500 hover:shadow-xl hover:shadow-primary/5">
               <img 
-                src="/munawirfikri-2.jpg" 
+                src="/img/munawirfikri-2.jpg" 
                 alt="Munawir Fikri Al-Akbari" 
                 className="object-cover object-top w-full h-full transition-transform duration-700 group-hover:scale-105 filter grayscale hover:grayscale-0"
               />
