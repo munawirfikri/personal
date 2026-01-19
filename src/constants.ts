@@ -8,9 +8,7 @@ export const PROFILE = {
   tagline: "Building scalable backend systems & digital solutions.",
   location: "Riau, Indonesia",
   email: "munawirfikri@gmail.com",
-  about: `I am an experienced Software Engineer with over 3+ years of experience in multiple industries including education, retail, health care, and dermatology. I have a strong foundation in programming languages and enjoy solving complex problems to deliver efficient, high-quality solutions. I am constantly exploring new technologies and keeping up with industry trends.
-
-  I hold a Master of Computer Science from Universitas Budi Luhur (GPA 3.7), building upon my Bachelor's in Informatics Engineering from Universitas Riau (GPA 3.64).`,
+  about: `I am an experienced Software Engineer with over 3+ years of experience in multiple industries including education, retail, health care, and dermatology. I have a strong foundation in programming languages and enjoy solving complex problems to deliver efficient, high-quality solutions. I am constantly exploring new technologies and keeping up with industry trends.`,
   availability: "Open for opportunities",
 };
 

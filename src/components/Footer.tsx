@@ -199,7 +199,7 @@ const Footer: React.FC = () => {
 
         <div className="pt-8 border-t border-border text-center text-sm text-gray-600">
           <p>© {new Date().getFullYear()} Munawir Fikri. All rights reserved.</p>
-          <p className="mt-2 text-xs">Built with React, Tailwind, and Gemini AI.</p>
+          <p className="mt-2 text-xs">Takkan Melayu Hilang di Bumi</p>
         </div>
       </div>
     </footer>
