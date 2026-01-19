@@ -83,7 +83,7 @@ const Hero: React.FC = () => {
               {/* Main Image */}
               <div className="relative h-full w-full overflow-hidden rounded-[2rem] shadow-2xl border border-border bg-surfaceHighlight">
                 <img 
-                  src="/profile.jpg" 
+                  src="/munawirfikri-1.jpg" 
                   alt={PROFILE.name}
                   className="w-full h-full object-cover filter grayscale contrast-110 brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105"
                 />
