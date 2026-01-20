@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { SectionId } from '../../types';
 import { useData } from '../../contexts/DataContext';
 
 const About: React.FC = () => {
-  const { profile, skills } = useData();
+  const { profile, skills, t } = useData();
 
   if (!profile) return null;
 
@@ -13,13 +14,13 @@ const About: React.FC = () => {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           
           <div className="space-y-6 order-2 md:order-1">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-primary">About Me</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-primary">{t('about_title')}</h2>
             <div className="text-secondary text-lg leading-relaxed whitespace-pre-line">
               {profile.about}
             </div>
             
             <div className="pt-8">
-              <h3 className="text-xl font-semibold mb-4 text-primary">Core Competencies</h3>
+              <h3 className="text-xl font-semibold mb-4 text-primary">{t('about_skills')}</h3>
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill) => (
                   <span 

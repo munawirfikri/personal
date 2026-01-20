@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { PROFILE, EXPERIENCES, PROJECTS, SKILLS, EDUCATION } from '../constants';
+import { PROFILE_EN as PROFILE, EXPERIENCES_EN as EXPERIENCES, PROJECTS_EN as PROJECTS, SKILLS, EDUCATION_EN as EDUCATION } from '../constants';
 
 // This service is used to power the "Ask about Munawir" feature.
 

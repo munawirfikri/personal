@@ -1,3 +1,6 @@
+
+export type Language = 'en' | 'id' | 'ms';
+
 export interface Experience {
   id: string;
   role: string;
