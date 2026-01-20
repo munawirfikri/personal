@@ -23,6 +23,7 @@ const InputGroup = ({ label, value, onChange, type = "text", as = "input" }: any
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [activeTab, setActiveTab] = useState<'profile' | 'experience' | 'education' | 'projects'>('profile');
   
   const { 
@@ -40,14 +41,31 @@ const AdminDashboard: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Get password from env, fallback to 'admin123' if not set
-    const validPassword = process.env.CMS_PASSWORD || 'admin123';
+    setErrorMsg("");
     
-    if (password === validPassword) { 
+    // Robust check for environment variables with common prefixes
+    // This handles cases where the bundler filters variables not starting with VITE_ or REACT_APP_
+    const envPassword = 
+      process.env.CMS_PASSWORD || 
+      process.env.VITE_CMS_PASSWORD || 
+      process.env.REACT_APP_CMS_PASSWORD;
+
+    // Debugging aid for the developer
+    console.log("CMS Login Debug:");
+    console.log("- Env Password Detected:", envPassword ? "Yes (Masked)" : "No");
+    
+    if (!envPassword) {
+        const msg = "CMS_PASSWORD not set in environment variables. Login disabled.";
+        console.error(msg);
+        setErrorMsg("Configuration Error: Password not configured.");
+        return;
+    }
+    
+    if (password === envPassword) { 
       setIsAuthenticated(true);
       sessionStorage.setItem('cms_auth', 'true');
     } else {
-      alert("Invalid Password");
+      setErrorMsg("Invalid Password");
     }
   };
 
@@ -61,11 +79,30 @@ const AdminDashboard: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <form onSubmit={handleLogin} className="bg-surfaceHighlight p-8 rounded-xl border border-border shadow-2xl max-w-md w-full animate-fade-in">
-          <h1 className="text-2xl font-bold text-primary mb-6 text-center">CMS Login</h1>
-          <InputGroup label="Password" type="password" value={password} onChange={setPassword} />
-          <button type="submit" className="w-full bg-primary text-background py-3 rounded-lg font-bold hover:opacity-90">Login</button>
-          <a href="#" className="block text-center mt-4 text-sm text-secondary hover:text-primary">Back to Website</a>
+        <form onSubmit={handleLogin} className="bg-surfaceHighlight p-8 rounded-xl border border-border shadow-2xl max-w-md w-full animate-fade-in relative overflow-hidden">
+          {/* Decorative background element */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          
+          <div className="relative z-10">
+            <h1 className="text-2xl font-bold text-primary mb-2 text-center">CMS Access</h1>
+            <p className="text-secondary text-sm text-center mb-8">Enter your credentials to manage content</p>
+            
+            <InputGroup label="Password" type="password" value={password} onChange={setPassword} />
+            
+            {errorMsg && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded text-red-500 text-sm text-center animate-pulse">
+                {errorMsg}
+              </div>
+            )}
+
+            <button type="submit" className="w-full bg-primary text-background py-3 rounded-lg font-bold hover:opacity-90 transition-opacity">
+              Login
+            </button>
+            
+            <a href="#" className="block text-center mt-6 text-xs text-secondary hover:text-primary transition-colors">
+              ← Return to Website
+            </a>
+          </div>
         </form>
       </div>
     );

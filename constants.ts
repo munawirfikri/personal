@@ -62,7 +62,7 @@ export const EDUCATION: Education[] = [
     degree: "Master of Computer Science",
     field: "Computer Science",
     year: "2022 - 2024",
-    gpa: "3.70/4.00",
+    gpa: "3.79/4.00",
     description: "Advanced studies in computer science algorithms, software engineering patterns, and research methodology."
   },
   {
