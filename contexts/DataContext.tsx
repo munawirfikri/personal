@@ -25,28 +25,50 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Initialize state from LocalStorage or fallback to constants
   const [profile, setProfile] = useState<typeof PROFILE>(() => {
-    const saved = localStorage.getItem('cms_profile');
-    return saved ? JSON.parse(saved) : PROFILE;
+    try {
+      const saved = localStorage.getItem('cms_profile');
+      return saved ? JSON.parse(saved) : PROFILE;
+    } catch (e) {
+      console.error("Error parsing profile from local storage", e);
+      return PROFILE;
+    }
   });
 
   const [experiences, setExperiences] = useState<Experience[]>(() => {
-    const saved = localStorage.getItem('cms_experiences');
-    return saved ? JSON.parse(saved) : EXPERIENCES;
+    try {
+      const saved = localStorage.getItem('cms_experiences');
+      return saved ? JSON.parse(saved) : EXPERIENCES;
+    } catch (e) {
+      return EXPERIENCES;
+    }
   });
 
   const [education, setEducation] = useState<EducationType[]>(() => {
-    const saved = localStorage.getItem('cms_education');
-    return saved ? JSON.parse(saved) : EDUCATION;
+    try {
+      const saved = localStorage.getItem('cms_education');
+      return saved ? JSON.parse(saved) : EDUCATION;
+    } catch (e) {
+      return EDUCATION;
+    }
   });
 
   const [projects, setProjects] = useState<Project[]>(() => {
-    const saved = localStorage.getItem('cms_projects');
-    return saved ? JSON.parse(saved) : PROJECTS;
+    try {
+      const saved = localStorage.getItem('cms_projects');
+      return saved ? JSON.parse(saved) : PROJECTS;
+    } catch (e) {
+      return PROJECTS;
+    }
   });
 
-  // Skills and Socials are static for now in this CMS demo, but could be expanded
+  // Skills and Socials are static for now in this CMS demo
   const [skills] = useState<Skill[]>(SKILLS);
   const [socials] = useState<SocialLink[]>(SOCIALS);
+
+  // Debug Log to confirm DataContext is active
+  useEffect(() => {
+    console.log("DataContext Initialized. Profile loaded:", profile.name);
+  }, []);
 
   // Persistence Effects
   useEffect(() => localStorage.setItem('cms_profile', JSON.stringify(profile)), [profile]);
@@ -83,7 +105,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useData = () => {
   const context = useContext(DataContext);
   if (context === undefined) {
-    throw new Error('useData must be used within a DataProvider');
+    throw new Error('useData must be used within a DataProvider. Check if App is wrapped in index.tsx');
   }
   return context;
 };

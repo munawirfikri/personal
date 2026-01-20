@@ -13,8 +13,8 @@ const Hero: React.FC = () => {
   const [delta, setDelta] = useState(100);
   const [greetings, setGreetings] = useState<string[]>([]);
 
-  // Ensure profile is loaded
-  if (!profile) return null;
+  // Guard clause: If profile context isn't ready, don't render
+  if (!profile) return <div className="min-h-screen bg-background"></div>;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,9 +38,10 @@ const Hero: React.FC = () => {
       id = "Selamat Malam"; my = "Selamat Malam"; en = "Good Evening";
     }
 
-    // Safety check for name splitting
-    const firstName = profile.name ? profile.name.split(' ')[0] : 'Munawir';
-    const lastName = profile.name && profile.name.split(' ').length > 1 ? profile.name.split(' ')[1] : 'Fikri';
+    // Safe access to name parts
+    const fullName = profile.name || "Munawir Fikri";
+    const nameParts = fullName.split(' ');
+    const lastName = nameParts.length > 1 ? nameParts[1] : nameParts[0];
 
     setGreetings([
       `${id}, Saya ${lastName}.`,
@@ -85,8 +86,10 @@ const Hero: React.FC = () => {
   }, [text, delta, isDeleting, loopNum, greetings]);
 
   // Derived state for display
-  const firstName = profile.name ? profile.name.split(' ')[0] : 'Munawir';
-  const lastNameRest = profile.name ? profile.name.split(' ').slice(1).join(' ') : 'Fikri';
+  const fullName = profile.name || "Munawir Fikri";
+  const parts = fullName.split(' ');
+  const firstName = parts[0];
+  const lastNameRest = parts.slice(1).join(' ');
   const locationDisplay = profile.location ? profile.location.split(',')[0] : 'Indonesia';
 
   return (
@@ -162,7 +165,7 @@ const Hero: React.FC = () => {
               <div className="relative h-full w-full overflow-hidden rounded-[2rem] shadow-2xl border border-border bg-surfaceHighlight">
                 <img 
                   src="/profile.jpg" 
-                  alt={profile.name}
+                  alt={fullName}
                   className="w-full h-full object-cover filter grayscale contrast-110 brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105"
                 />
                 
