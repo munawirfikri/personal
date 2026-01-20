@@ -40,7 +40,10 @@ const AdminDashboard: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin123') { // Simple hardcoded password
+    // Get password from env, fallback to 'admin123' if not set
+    const validPassword = process.env.CMS_PASSWORD || 'admin123';
+    
+    if (password === validPassword) { 
       setIsAuthenticated(true);
       sessionStorage.setItem('cms_auth', 'true');
     } else {
@@ -60,7 +63,7 @@ const AdminDashboard: React.FC = () => {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <form onSubmit={handleLogin} className="bg-surfaceHighlight p-8 rounded-xl border border-border shadow-2xl max-w-md w-full animate-fade-in">
           <h1 className="text-2xl font-bold text-primary mb-6 text-center">CMS Login</h1>
-          <InputGroup label="Password (try: admin123)" type="password" value={password} onChange={setPassword} />
+          <InputGroup label="Password" type="password" value={password} onChange={setPassword} />
           <button type="submit" className="w-full bg-primary text-background py-3 rounded-lg font-bold hover:opacity-90">Login</button>
           <a href="#" className="block text-center mt-4 text-sm text-secondary hover:text-primary">Back to Website</a>
         </form>
