@@ -196,24 +196,6 @@ export const EDUCATION_EN: Education[] = [
 export const PROJECTS_EN: Project[] = [
   {
     id: 'p1',
-    title: "CIS DERMIES Backend",
-    description: "Architected and maintained the core backend system for Dermies (Arya Noble). Handled high-load data processing and third-party integrations.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=10",
-    tags: ["Backend", "SAP Integration", "Health Tech"],
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 'p2',
-    title: "Pick & Pack Mobile App",
-    description: "Developed the Content Management System and robust backend APIs for the Pick & Pack mobile application, ensuring seamless data synchronization.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=11",
-    tags: ["Mobile Backend", "CMS", "API Development"],
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 'p3',
     title: "Academic Portal System",
     description: "Built a comprehensive Academic Information System for IAI Tafaqquh Fiddin, managing student data, grades, and course schedules.",
     imageUrl: "https://picsum.photos/600/400?grayscale&random=12",
@@ -301,24 +283,6 @@ export const EDUCATION_ID: Education[] = [
 export const PROJECTS_ID: Project[] = [
   {
     id: 'p1',
-    title: "CIS DERMIES Backend",
-    description: "Merancang dan memelihara sistem backend inti untuk Dermies (Arya Noble). Menangani pemrosesan data beban tinggi dan integrasi pihak ketiga.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=10",
-    tags: ["Backend", "Integrasi SAP", "Health Tech"],
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 'p2',
-    title: "Pick & Pack Mobile App",
-    description: "Mengembangkan Content Management System dan API backend yang tangguh untuk aplikasi mobile Pick & Pack, memastikan sinkronisasi data yang mulus.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=11",
-    tags: ["Backend Mobile", "CMS", "Pengembangan API"],
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 'p3',
     title: "Sistem Portal Akademik",
     description: "Membangun Sistem Informasi Akademik komprehensif untuk IAI Tafaqquh Fiddin, mengelola data mahasiswa, nilai, dan jadwal kuliah.",
     imageUrl: "https://picsum.photos/600/400?grayscale&random=12",
@@ -406,24 +370,6 @@ export const EDUCATION_MS: Education[] = [
 export const PROJECTS_MS: Project[] = [
   {
     id: 'p1',
-    title: "CIS DERMIES Backend",
-    description: "Merancang dan menyelenggara sistem backend teras untuk Dermies (Arya Noble). Mengendalikan pemprosesan data beban tinggi dan integrasi pihak ketiga.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=10",
-    tags: ["Backend", "Integrasi SAP", "Teknologi Kesihatan"],
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 'p2',
-    title: "Aplikasi Mudah Alih Pick & Pack",
-    description: "Membangunkan Sistem Pengurusan Kandungan dan API backend yang teguh untuk aplikasi mudah alih Pick & Pack, memastikan penyegerakan data yang lancar.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=11",
-    tags: ["Backend Mudah Alih", "CMS", "Pembangunan API"],
-    link: "#",
-    github: "#"
-  },
-  {
-    id: 'p3',
     title: "Sistem Portal Akademik",
     description: "Membina Sistem Maklumat Akademik komprehensif untuk IAI Tafaqquh Fiddin, mengurus data pelajar, gred, dan jadual kursus.",
     imageUrl: "https://picsum.photos/600/400?grayscale&random=12",
