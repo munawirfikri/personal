@@ -9,6 +9,7 @@ import Instagram from './components/Sections/Instagram';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const App: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -31,28 +32,34 @@ const App: React.FC = () => {
   }, []);
 
   if (isAdmin) {
-    return <AdminDashboard />;
+    return (
+      <ErrorBoundary>
+        <AdminDashboard />
+      </ErrorBoundary>
+    );
   }
 
   return (
-    <div className="bg-background text-primary font-sans selection:bg-black selection:text-white">
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Education />
-        <Projects />
-        <Instagram />
-      </main>
-      <Footer />
-      <ChatWidget />
-      
-      {/* Secret link to Admin */}
-      <div className="fixed bottom-2 left-2 opacity-0 hover:opacity-100 transition-opacity z-50">
-        <a href="#admin" className="text-[10px] text-secondary">Admin</a>
+    <ErrorBoundary>
+      <div className="bg-background text-primary font-sans selection:bg-black selection:text-white">
+        <Navbar />
+        <main>
+          <Hero />
+          <About />
+          <Experience />
+          <Education />
+          <Projects />
+          <Instagram />
+        </main>
+        <Footer />
+        <ChatWidget />
+        
+        {/* Secret link to Admin */}
+        <div className="fixed bottom-2 left-2 opacity-0 hover:opacity-100 transition-opacity z-50">
+          <a href="#admin" className="text-[10px] text-secondary">Admin</a>
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 
