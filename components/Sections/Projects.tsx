@@ -1,16 +1,17 @@
+
 import React from 'react';
 import { SectionId } from '../../types';
 import { useData } from '../../contexts/DataContext';
 
 const Projects: React.FC = () => {
-  const { projects } = useData();
+  const { projects, t } = useData();
 
   return (
     <section id={SectionId.PROJECTS} className="py-24 bg-surface scroll-mt-28">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-           <h2 className="text-3xl md:text-4xl font-bold text-primary">Featured Projects</h2>
-           <p className="text-secondary mt-4 md:mt-0">Some things I've built.</p>
+           <h2 className="text-3xl md:text-4xl font-bold text-primary">{t('proj_title')}</h2>
+           <p className="text-secondary mt-4 md:mt-0">{t('proj_subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -45,12 +46,12 @@ const Projects: React.FC = () => {
                 <div className="flex gap-4">
                   {project.link && (
                     <a href={project.link} className="text-sm font-semibold hover:underline decoration-primary underline-offset-4 text-primary">
-                      Live Demo
+                      {t('proj_demo')}
                     </a>
                   )}
                   {project.github && (
                      <a href={project.github} className="text-sm font-semibold hover:underline decoration-primary underline-offset-4 text-primary">
-                      GitHub
+                      {t('proj_github')}
                     </a>
                   )}
                 </div>

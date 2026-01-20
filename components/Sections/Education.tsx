@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { SectionId } from '../../types';
 import { useData } from '../../contexts/DataContext';
 
 const Education: React.FC = () => {
-  const { education } = useData();
+  const { education, t } = useData();
 
   return (
     <section id={SectionId.EDUCATION} className="py-24 bg-surfaceHighlight scroll-mt-28 relative overflow-hidden">
@@ -15,7 +16,7 @@ const Education: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center text-primary">Education</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center text-primary">{t('edu_title')}</h2>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {education.map((edu, index) => (
@@ -48,7 +49,7 @@ const Education: React.FC = () => {
 
               {edu.gpa && (
                   <div className="pt-4 border-t border-border flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-wider text-secondary font-semibold">GPA</span>
+                      <span className="text-xs uppercase tracking-wider text-secondary font-semibold">{t('edu_gpa')}</span>
                       <span className="font-mono font-bold text-primary">{edu.gpa}</span>
                   </div>
               )}

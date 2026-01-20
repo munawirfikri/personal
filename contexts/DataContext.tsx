@@ -1,101 +1,142 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { PROFILE, EXPERIENCES, EDUCATION, PROJECTS, SKILLS, SOCIALS } from '../constants';
-import { Experience, Education as EducationType, Project, Skill, SocialLink } from '../types';
+import { 
+  PROFILE_EN, EXPERIENCES_EN, EDUCATION_EN, PROJECTS_EN,
+  PROFILE_ID, EXPERIENCES_ID, EDUCATION_ID, PROJECTS_ID,
+  PROFILE_MS, EXPERIENCES_MS, EDUCATION_MS, PROJECTS_MS,
+  SKILLS, SOCIALS, UI_TRANSLATIONS 
+} from '../constants';
+import { Experience, Education as EducationType, Project, Skill, SocialLink, Language } from '../types';
 
 // Define the shape of our "Database"
 interface AppData {
-  profile: typeof PROFILE;
+  language: Language;
+  profile: typeof PROFILE_EN;
   experiences: Experience[];
   education: EducationType[];
   projects: Project[];
   skills: Skill[];
   socials: SocialLink[];
+  translations: typeof UI_TRANSLATIONS['en'];
 }
 
 interface DataContextType extends AppData {
-  updateProfile: (data: typeof PROFILE) => void;
+  setLanguage: (lang: Language) => void;
+  updateProfile: (data: typeof PROFILE_EN) => void;
   updateExperiences: (data: Experience[]) => void;
   updateEducation: (data: EducationType[]) => void;
   updateProjects: (data: Project[]) => void;
   resetData: () => void;
+  t: (key: keyof typeof UI_TRANSLATIONS['en']) => string;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Initialize state from LocalStorage or fallback to constants
-  const [profile, setProfile] = useState<typeof PROFILE>(() => {
-    try {
-      const saved = localStorage.getItem('cms_profile');
-      return saved ? JSON.parse(saved) : PROFILE;
-    } catch (e) {
-      console.error("Error parsing profile from local storage", e);
-      return PROFILE;
-    }
+  // 1. Initialize Language
+  const [language, setLanguageState] = useState<Language>(() => {
+    return (localStorage.getItem('app_language') as Language) || 'en';
   });
 
-  const [experiences, setExperiences] = useState<Experience[]>(() => {
-    try {
-      const saved = localStorage.getItem('cms_experiences');
-      return saved ? JSON.parse(saved) : EXPERIENCES;
-    } catch (e) {
-      return EXPERIENCES;
-    }
-  });
+  // Helpers to get initial data based on language
+  const getInitialProfile = (lang: Language) => {
+    if (lang === 'id') return PROFILE_ID;
+    if (lang === 'ms') return PROFILE_MS;
+    return PROFILE_EN;
+  }
+  const getInitialExperiences = (lang: Language) => {
+    if (lang === 'id') return EXPERIENCES_ID;
+    if (lang === 'ms') return EXPERIENCES_MS;
+    return EXPERIENCES_EN;
+  }
+  const getInitialEducation = (lang: Language) => {
+    if (lang === 'id') return EDUCATION_ID;
+    if (lang === 'ms') return EDUCATION_MS;
+    return EDUCATION_EN;
+  }
+  const getInitialProjects = (lang: Language) => {
+    if (lang === 'id') return PROJECTS_ID;
+    if (lang === 'ms') return PROJECTS_MS;
+    return PROJECTS_EN;
+  }
 
-  const [education, setEducation] = useState<EducationType[]>(() => {
-    try {
-      const saved = localStorage.getItem('cms_education');
-      return saved ? JSON.parse(saved) : EDUCATION;
-    } catch (e) {
-      return EDUCATION;
-    }
-  });
+  // 2. State definition with keyed persistence
+  // We use key prefix like "en_profile", "id_profile" so CMS edits are per-language.
+  
+  const [profile, setProfile] = useState<typeof PROFILE_EN>(getInitialProfile(language));
+  const [experiences, setExperiences] = useState<Experience[]>(getInitialExperiences(language));
+  const [education, setEducation] = useState<EducationType[]>(getInitialEducation(language));
+  const [projects, setProjects] = useState<Project[]>(getInitialProjects(language));
 
-  const [projects, setProjects] = useState<Project[]>(() => {
-    try {
-      const saved = localStorage.getItem('cms_projects');
-      return saved ? JSON.parse(saved) : PROJECTS;
-    } catch (e) {
-      return PROJECTS;
-    }
-  });
+  // 3. Load data from local storage whenever language changes
+  useEffect(() => {
+    const loadDataForLang = (lang: Language) => {
+      try {
+        const savedProfile = localStorage.getItem(`${lang}_profile`);
+        setProfile(savedProfile ? JSON.parse(savedProfile) : getInitialProfile(lang));
 
-  // Skills and Socials are static for now in this CMS demo
+        const savedExp = localStorage.getItem(`${lang}_experiences`);
+        setExperiences(savedExp ? JSON.parse(savedExp) : getInitialExperiences(lang));
+
+        const savedEdu = localStorage.getItem(`${lang}_education`);
+        setEducation(savedEdu ? JSON.parse(savedEdu) : getInitialEducation(lang));
+
+        const savedProj = localStorage.getItem(`${lang}_projects`);
+        setProjects(savedProj ? JSON.parse(savedProj) : getInitialProjects(lang));
+      } catch (e) {
+        console.error("Error loading language data", e);
+      }
+    };
+
+    loadDataForLang(language);
+    localStorage.setItem('app_language', language);
+  }, [language]);
+
+  // 4. Persistence Effects (Save to [lang]_key when state changes)
+  useEffect(() => localStorage.setItem(`${language}_profile`, JSON.stringify(profile)), [profile, language]);
+  useEffect(() => localStorage.setItem(`${language}_experiences`, JSON.stringify(experiences)), [experiences, language]);
+  useEffect(() => localStorage.setItem(`${language}_education`, JSON.stringify(education)), [education, language]);
+  useEffect(() => localStorage.setItem(`${language}_projects`, JSON.stringify(projects)), [projects, language]);
+
   const [skills] = useState<Skill[]>(SKILLS);
   const [socials] = useState<SocialLink[]>(SOCIALS);
 
-  // Debug Log to confirm DataContext is active
-  useEffect(() => {
-    console.log("DataContext Initialized. Profile loaded:", profile.name);
-  }, []);
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+  };
 
-  // Persistence Effects
-  useEffect(() => localStorage.setItem('cms_profile', JSON.stringify(profile)), [profile]);
-  useEffect(() => localStorage.setItem('cms_experiences', JSON.stringify(experiences)), [experiences]);
-  useEffect(() => localStorage.setItem('cms_education', JSON.stringify(education)), [education]);
-  useEffect(() => localStorage.setItem('cms_projects', JSON.stringify(projects)), [projects]);
-
-  const updateProfile = (data: typeof PROFILE) => setProfile(data);
+  const updateProfile = (data: typeof PROFILE_EN) => setProfile(data);
   const updateExperiences = (data: Experience[]) => setExperiences(data);
   const updateEducation = (data: EducationType[]) => setEducation(data);
   const updateProjects = (data: Project[]) => setProjects(data);
 
   const resetData = () => {
-    if(confirm("Are you sure? This will reset all your changes to the original code defaults.")) {
-      setProfile(PROFILE);
-      setExperiences(EXPERIENCES);
-      setEducation(EDUCATION);
-      setProjects(PROJECTS);
-      localStorage.clear();
+    if(confirm(`Are you sure? This will reset the ${language.toUpperCase()} content to defaults.`)) {
+      setProfile(getInitialProfile(language));
+      setExperiences(getInitialExperiences(language));
+      setEducation(getInitialEducation(language));
+      setProjects(getInitialProjects(language));
+      
+      // Clear specific keys
+      localStorage.removeItem(`${language}_profile`);
+      localStorage.removeItem(`${language}_experiences`);
+      localStorage.removeItem(`${language}_education`);
+      localStorage.removeItem(`${language}_projects`);
+      
       window.location.reload();
     }
   };
 
+  const t = (key: keyof typeof UI_TRANSLATIONS['en']): string => {
+    return UI_TRANSLATIONS[language][key] || UI_TRANSLATIONS['en'][key] || key;
+  };
+
   return (
     <DataContext.Provider value={{
+      language, setLanguage,
       profile, experiences, education, projects, skills, socials,
-      updateProfile, updateExperiences, updateEducation, updateProjects, resetData
+      updateProfile, updateExperiences, updateEducation, updateProjects, resetData,
+      t, translations: UI_TRANSLATIONS[language]
     }}>
       {children}
     </DataContext.Provider>

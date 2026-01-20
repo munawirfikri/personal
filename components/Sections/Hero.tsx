@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { SectionId } from '../../types';
 import { useData } from '../../contexts/DataContext';
 
 const Hero: React.FC = () => {
-  const { profile } = useData();
+  const { profile, language, t } = useData();
   const [scrollY, setScrollY] = useState(0);
   
   // Typewriter State
@@ -24,18 +25,18 @@ const Hero: React.FC = () => {
     
     // Set greetings based on time of day
     const hour = new Date().getHours();
-    let id = "Halo";
-    let my = "Hai";
-    let en = "Hello";
+    let id_msg = "Halo";
+    let ms_msg = "Hai";
+    let en_msg = "Hello";
 
     if (hour >= 5 && hour < 12) {
-      id = "Selamat Pagi"; my = "Selamat Pagi"; en = "Good Morning";
+      id_msg = "Selamat Pagi"; ms_msg = "Selamat Pagi"; en_msg = "Good Morning";
     } else if (hour >= 12 && hour < 15) {
-      id = "Selamat Siang"; my = "Selamat Tengahari"; en = "Good Afternoon";
+      id_msg = "Selamat Siang"; ms_msg = "Selamat Tengahari"; en_msg = "Good Afternoon";
     } else if (hour >= 15 && hour < 18) {
-      id = "Selamat Sore"; my = "Selamat Petang"; en = "Good Afternoon";
+      id_msg = "Selamat Sore"; ms_msg = "Selamat Petang"; en_msg = "Good Afternoon";
     } else {
-      id = "Selamat Malam"; my = "Selamat Malam"; en = "Good Evening";
+      id_msg = "Selamat Malam"; ms_msg = "Selamat Malam"; en_msg = "Good Evening";
     }
 
     // Safe access to name parts
@@ -43,14 +44,17 @@ const Hero: React.FC = () => {
     const nameParts = fullName.split(' ');
     const lastName = nameParts.length > 1 ? nameParts[1] : nameParts[0];
 
-    setGreetings([
-      `${id}, Saya ${lastName}.`,
-      `${my}, Saye ${lastName}.`, 
-      `${en}, I'm ${lastName}.`
-    ]);
+    // Prioritize the current language greeting, then cycle others
+    if (language === 'id') {
+      setGreetings([`${id_msg}, Saya ${lastName}.`, `${en_msg}, I'm ${lastName}.`]);
+    } else if (language === 'ms') {
+      setGreetings([`${ms_msg}, Saya ${lastName}.`, `${en_msg}, I'm ${lastName}.`]);
+    } else {
+      setGreetings([`${en_msg}, I'm ${lastName}.`, `${id_msg}, Saya ${lastName}.`]);
+    }
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [profile.name]);
+  }, [profile.name, language]);
 
   // Typewriter Effect Logic
   useEffect(() => {
@@ -118,7 +122,7 @@ const Hero: React.FC = () => {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
               <span className="text-xs font-mono font-medium text-secondary uppercase tracking-wider">
-                Based in {locationDisplay}
+                {t('hero_based')} {locationDisplay}
               </span>
             </div>
             
@@ -136,7 +140,7 @@ const Hero: React.FC = () => {
                 href={`#${SectionId.PROJECTS}`}
                 className="group px-8 py-4 bg-primary text-background font-medium rounded-lg hover:opacity-90 transition-all hover:-translate-y-1 shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
               >
-                View Latest Work
+                {t('hero_latest')}
                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -145,7 +149,7 @@ const Hero: React.FC = () => {
                 href={`#${SectionId.CONTACT}`}
                 className="px-8 py-4 border border-border bg-transparent hover:bg-surfaceHighlight text-primary font-medium rounded-lg transition-all hover:border-primary flex items-center justify-center"
               >
-                Contact Me
+                {t('hero_contact')}
               </a>
             </div>
           </div>
@@ -179,9 +183,9 @@ const Hero: React.FC = () => {
                   <div className="p-2 bg-primary text-background rounded-lg">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-secondary">Expertise</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-secondary">{t('hero_expertise')}</span>
                 </div>
-                <p className="font-bold text-primary leading-tight">Backend & Scalable Systems</p>
+                <p className="font-bold text-primary leading-tight">{t('hero_expertise_desc')}</p>
               </div>
             </div>
 

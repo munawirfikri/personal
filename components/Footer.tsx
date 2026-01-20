@@ -1,10 +1,11 @@
+
 import React, { useState, useRef } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import { useData } from '../contexts/DataContext';
 import { SectionId } from '../types';
 
 const Footer: React.FC = () => {
-  const { profile, socials } = useData();
+  const { profile, socials, t } = useData();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -76,22 +77,21 @@ const Footer: React.FC = () => {
         <div className="grid md:grid-cols-2 gap-12 lg:gap-24 mb-20">
             {/* Contact Info */}
             <div className="order-2 md:order-1">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">Let's work together</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">{t('contact_title')}</h2>
                 <p className="text-secondary text-lg mb-12">
-                    Have a project in mind or want to discuss modern backend solutions? 
-                    I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
+                    {t('contact_desc')}
                 </p>
 
                 <div className="space-y-8">
                     <div>
-                        <h4 className="text-sm font-bold uppercase tracking-wider text-secondary mb-2">Email</h4>
+                        <h4 className="text-sm font-bold uppercase tracking-wider text-secondary mb-2">{t('contact_email_label')}</h4>
                         <a href={`mailto:${profile.email}`} className="text-xl text-primary hover:underline decoration-secondary underline-offset-4 break-all">
                             {profile.email}
                         </a>
                     </div>
                     
                     <div>
-                        <h4 className="text-sm font-bold uppercase tracking-wider text-secondary mb-3">Socials</h4>
+                        <h4 className="text-sm font-bold uppercase tracking-wider text-secondary mb-3">{t('contact_socials_label')}</h4>
                         <div className="flex gap-4">
                             {socials.map(social => (
                             <a 
@@ -116,7 +116,7 @@ const Footer: React.FC = () => {
             <div className="order-1 md:order-2 bg-surfaceHighlight p-5 md:p-8 rounded-2xl border border-border shadow-2xl relative">
                 <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-secondary mb-2">Name</label>
+                        <label htmlFor="name" className="block text-sm font-medium text-secondary mb-2">{t('form_name')}</label>
                         <input
                             type="text"
                             id="name"
@@ -130,7 +130,7 @@ const Footer: React.FC = () => {
                     </div>
 
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-secondary mb-2">Email</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-secondary mb-2">{t('form_email')}</label>
                         <input
                             type="email"
                             id="email"
@@ -144,7 +144,7 @@ const Footer: React.FC = () => {
                     </div>
 
                     <div>
-                        <label htmlFor="message" className="block text-sm font-medium text-secondary mb-2">Message</label>
+                        <label htmlFor="message" className="block text-sm font-medium text-secondary mb-2">{t('form_message')}</label>
                         <textarea
                             id="message"
                             name="message"
@@ -178,9 +178,9 @@ const Footer: React.FC = () => {
                         {isSubmitting ? (
                           <span className="flex items-center justify-center gap-2">
                             <span className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin"></span>
-                            Sending...
+                            {t('form_sending')}
                           </span>
-                        ) : 'Send Message'}
+                        ) : t('form_send')}
                     </button>
 
                     {submitStatus === 'success' && (
@@ -189,8 +189,8 @@ const Footer: React.FC = () => {
                                 <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                                 </div>
-                                <h3 className="text-xl font-bold text-primary mb-2">Message Sent!</h3>
-                                <p className="text-secondary">I'll get back to you as soon as possible.</p>
+                                <h3 className="text-xl font-bold text-primary mb-2">{t('form_sent')}</h3>
+                                <p className="text-secondary">{t('form_sent_desc')}</p>
                             </div>
                         </div>
                     )}
@@ -201,8 +201,8 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="pt-8 border-t border-border text-center text-sm text-secondary">
-          <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
-          <p className="mt-2 text-xs">Built with React, Tailwind, and Gemini AI.</p>
+          <p>© {new Date().getFullYear()} {profile.name}. {t('footer_rights')}</p>
+          <p className="mt-2 text-xs">{t('footer_built')}</p>
         </div>
       </div>
     </footer>

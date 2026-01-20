@@ -1,14 +1,15 @@
+
 import React from 'react';
 import { SectionId } from '../../types';
 import { useData } from '../../contexts/DataContext';
 
 const Experience: React.FC = () => {
-  const { experiences } = useData();
+  const { experiences, t } = useData();
 
   return (
     <section id={SectionId.EXPERIENCE} className="py-24 bg-background scroll-mt-28">
       <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center text-primary">Work Experience</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center text-primary">{t('exp_title')}</h2>
         
         <div className="flex flex-col">
           {experiences.map((exp, index) => (
