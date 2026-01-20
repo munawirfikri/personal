@@ -13,6 +13,9 @@ const Hero: React.FC = () => {
   const [delta, setDelta] = useState(100);
   const [greetings, setGreetings] = useState<string[]>([]);
 
+  // Ensure profile is loaded
+  if (!profile) return null;
+
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -35,10 +38,14 @@ const Hero: React.FC = () => {
       id = "Selamat Malam"; my = "Selamat Malam"; en = "Good Evening";
     }
 
+    // Safety check for name splitting
+    const firstName = profile.name ? profile.name.split(' ')[0] : 'Munawir';
+    const lastName = profile.name && profile.name.split(' ').length > 1 ? profile.name.split(' ')[1] : 'Fikri';
+
     setGreetings([
-      `${id}, Saya ${profile.name.split(' ')[1]}.`,   // Dynamic last name usage
-      `${my}, Saye ${profile.name.split(' ')[1]}.`, 
-      `${en}, I'm ${profile.name.split(' ')[1]}.`
+      `${id}, Saya ${lastName}.`,
+      `${my}, Saye ${lastName}.`, 
+      `${en}, I'm ${lastName}.`
     ]);
 
     return () => window.removeEventListener('scroll', handleScroll);
@@ -77,6 +84,11 @@ const Hero: React.FC = () => {
     return () => clearTimeout(ticker);
   }, [text, delta, isDeleting, loopNum, greetings]);
 
+  // Derived state for display
+  const firstName = profile.name ? profile.name.split(' ')[0] : 'Munawir';
+  const lastNameRest = profile.name ? profile.name.split(' ').slice(1).join(' ') : 'Fikri';
+  const locationDisplay = profile.location ? profile.location.split(',')[0] : 'Indonesia';
+
   return (
     <section 
       id={SectionId.HERO} 
@@ -103,13 +115,13 @@ const Hero: React.FC = () => {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
               <span className="text-xs font-mono font-medium text-secondary uppercase tracking-wider">
-                Based in {profile.location.split(',')[0]}
+                Based in {locationDisplay}
               </span>
             </div>
             
             <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-6 animate-slide-up text-primary leading-[1.1]">
-              {profile.name.split(' ')[0]} <br />
-              <span className="text-secondary/60">{profile.name.split(' ').slice(1).join(' ')}</span>
+              {firstName} <br />
+              <span className="text-secondary/60">{lastNameRest}</span>
             </h1>
             
             <p className="text-lg md:text-xl text-secondary max-w-lg mb-8 leading-relaxed animate-slide-up mx-auto md:mx-0" style={{animationDelay: '0.1s'}}>

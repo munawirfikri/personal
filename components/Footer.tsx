@@ -16,6 +16,8 @@ const Footer: React.FC = () => {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const recaptchaRef = useRef<any>(null);
 
+  if (!profile) return null;
+
   const validate = () => {
     const newErrors: {name?: string, email?: string, message?: string, captcha?: string} = {};
     if (!formData.name.trim()) newErrors.name = 'Name is required';

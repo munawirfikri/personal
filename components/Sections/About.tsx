@@ -5,6 +5,8 @@ import { useData } from '../../contexts/DataContext';
 const About: React.FC = () => {
   const { profile, skills } = useData();
 
+  if (!profile) return null;
+
   return (
     <section id={SectionId.ABOUT} className="py-24 bg-surface relative overflow-hidden scroll-mt-28">
       <div className="container mx-auto px-6">
