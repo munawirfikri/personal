@@ -38,7 +38,7 @@ export const UI_TRANSLATIONS = {
     form_sent: 'Message Sent!',
     form_sent_desc: "I'll get back to you as soon as possible.",
     footer_rights: 'All rights reserved.',
-    footer_built: 'Built with React, Tailwind, and Gemini AI.'
+    footer_built: 'Powered by Google AI Studio.'
   },
   id: {
     nav_about: 'Tentang',
@@ -75,7 +75,7 @@ export const UI_TRANSLATIONS = {
     form_sent: 'Pesan Terkirim!',
     form_sent_desc: "Saya akan membalas secepat mungkin.",
     footer_rights: 'Hak cipta dilindungi.',
-    footer_built: 'Dibuat dengan React, Tailwind, dan Gemini AI.'
+    footer_built: 'Powered by Google AI Studio.'
   },
   ms: {
     nav_about: 'Tentang',
@@ -112,7 +112,7 @@ export const UI_TRANSLATIONS = {
     form_sent: 'Mesej Dihantar!',
     form_sent_desc: "Saya akan membalas secepat mungkin.",
     footer_rights: 'Hak cipta terpelihara.',
-    footer_built: 'Dibina dengan React, Tailwind, dan Gemini AI.'
+    footer_built: 'Powered by Google AI Studio.'
   }
 };
 

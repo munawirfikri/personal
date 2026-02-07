@@ -4,6 +4,7 @@ import Navbar from './components/Layout/Navbar';
 import Hero from './components/Sections/Hero';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
+import PWAInstallBanner from './components/PWAInstallBanner';
 
 const About = lazy(() => import('./components/Sections/About'));
 const Experience = lazy(() => import('./components/Sections/Experience'));
@@ -62,6 +63,7 @@ const App: React.FC = () => {
         <Suspense fallback={null}>
           <ChatWidget />
         </Suspense>
+        <PWAInstallBanner />
         
         {/* Secret link to Admin */}
         <div className="fixed bottom-2 left-2 opacity-0 hover:opacity-100 transition-opacity z-50">
