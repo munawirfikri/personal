@@ -5,6 +5,7 @@ import Hero from './components/Sections/Hero';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import PWAInstallBanner from './components/PWAInstallBanner';
+import { initGA, trackPageView } from './services/analytics';
 
 const About = lazy(() => import('./components/Sections/About'));
 const Experience = lazy(() => import('./components/Sections/Experience'));
@@ -18,7 +19,12 @@ const App: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    initGA();
+    trackPageView(window.location.pathname + window.location.search);
+
     const handleHashChange = () => {
+      trackPageView(window.location.pathname + window.location.hash);
+      
       if (window.location.hash === '#admin') {
         setIsAdmin(true);
       } else {
