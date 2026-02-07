@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import SEO from './components/SEO';
 import Navbar from './components/Layout/Navbar';
 import Hero from './components/Sections/Hero';
-import About from './components/Sections/About';
-import Experience from './components/Sections/Experience';
-import Education from './components/Sections/Education';
-import Projects from './components/Sections/Projects';
-import Instagram from './components/Sections/Instagram';
 import Footer from './components/Footer';
-import ChatWidget from './components/ChatWidget';
-import AdminDashboard from './components/Admin/AdminDashboard';
 import ErrorBoundary from './components/ErrorBoundary';
+
+const About = lazy(() => import('./components/Sections/About'));
+const Experience = lazy(() => import('./components/Sections/Experience'));
+const Education = lazy(() => import('./components/Sections/Education'));
+const Projects = lazy(() => import('./components/Sections/Projects'));
+const Instagram = lazy(() => import('./components/Sections/Instagram'));
+const ChatWidget = lazy(() => import('./components/ChatWidget'));
+const AdminDashboard = lazy(() => import('./components/Admin/AdminDashboard'));
 
 const App: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -35,7 +36,9 @@ const App: React.FC = () => {
   if (isAdmin) {
     return (
       <ErrorBoundary>
-        <AdminDashboard />
+        <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
+          <AdminDashboard />
+        </Suspense>
       </ErrorBoundary>
     );
   }
@@ -47,14 +50,18 @@ const App: React.FC = () => {
         <Navbar />
         <main>
           <Hero />
-          <About />
-          <Experience />
-          <Education />
-          <Projects />
-          <Instagram />
+          <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>}>
+            <About />
+            <Experience />
+            <Education />
+            <Projects />
+            <Instagram />
+          </Suspense>
         </main>
         <Footer />
-        <ChatWidget />
+        <Suspense fallback={null}>
+          <ChatWidget />
+        </Suspense>
         
         {/* Secret link to Admin */}
         <div className="fixed bottom-2 left-2 opacity-0 hover:opacity-100 transition-opacity z-50">
