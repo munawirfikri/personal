@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from './components/SEO';
 import Navbar from './components/Layout/Navbar';
 import Hero from './components/Sections/Hero';
 import About from './components/Sections/About';
@@ -41,6 +42,7 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
+      <SEO />
       <div className="bg-background text-primary font-sans selection:bg-black selection:text-white">
         <Navbar />
         <main>
