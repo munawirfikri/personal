@@ -198,7 +198,7 @@ export const PROJECTS_EN: Project[] = [
     id: 'p1',
     title: "Academic Portal System",
     description: "Built a comprehensive Academic Information System for IAI Tafaqquh Fiddin, managing student data, grades, and course schedules.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=12",
+    imageUrl: "https://placehold.co/600x400/171717/a3a3a3?text=Academic+Portal",
     tags: ["Web App", "Information Systems", "Education Tech"],
     link: "#",
     github: "#"
@@ -285,7 +285,7 @@ export const PROJECTS_ID: Project[] = [
     id: 'p1',
     title: "Sistem Portal Akademik",
     description: "Membangun Sistem Informasi Akademik komprehensif untuk IAI Tafaqquh Fiddin, mengelola data mahasiswa, nilai, dan jadwal kuliah.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=12",
+    imageUrl: "https://placehold.co/600x400/171717/a3a3a3?text=Portal+Akademik",
     tags: ["Aplikasi Web", "Sistem Informasi", "Education Tech"],
     link: "#",
     github: "#"
@@ -372,7 +372,7 @@ export const PROJECTS_MS: Project[] = [
     id: 'p1',
     title: "Sistem Portal Akademik",
     description: "Membina Sistem Maklumat Akademik komprehensif untuk IAI Tafaqquh Fiddin, mengurus data pelajar, gred, dan jadual kursus.",
-    imageUrl: "https://picsum.photos/600/400?grayscale&random=12",
+    imageUrl: "https://placehold.co/600x400/171717/a3a3a3?text=Portal+Akademik",
     tags: ["Aplikasi Web", "Sistem Maklumat", "Teknologi Pendidikan"],
     link: "#",
     github: "#"

@@ -40,7 +40,13 @@ export const portfolioApi = {
 
   // Projects
   getProjects: (lang: string = 'en'): Promise<Project[]> =>
-    api.get(`/projects?lang=${lang}`).then(res => res.data),
+    api.get(`/projects?language=${lang}`).then(res => 
+      res.data.map((p: any) => ({
+        ...p,
+        imageUrl: p.image_url,
+        id: p.id.toString()
+      }))
+    ),
   
   createProject: (data: Omit<Project, 'id'>): Promise<Project> =>
     api.post('/projects', data).then(res => res.data),

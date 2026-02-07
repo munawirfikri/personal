@@ -20,10 +20,15 @@ const Projects: React.FC = () => {
               key={project.id} 
               className="group relative bg-surfaceHighlight border border-border rounded-xl overflow-hidden hover:border-secondary transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-xl hover:shadow-primary/5"
             >
-              <div className="aspect-video w-full overflow-hidden relative">
+              <div className="aspect-video w-full overflow-hidden relative bg-surfaceHighlight">
                 <img 
                   src={project.imageUrl} 
-                  alt={project.title} 
+                  alt={project.title}
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"%3E%3Crect fill="%23171717" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23a3a3a3" font-family="sans-serif" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E';
+                  }}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100 filter grayscale group-hover:grayscale-0"
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
