@@ -176,7 +176,7 @@ const Footer: React.FC = () => {
                         <div className="transform scale-[0.85] origin-top-left md:scale-100 sm:scale-100">
                           <ReCAPTCHA
                               ref={recaptchaRef}
-                              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // Google Test Site Key
+                              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}
                               onChange={handleCaptchaChange}
                               theme="dark"
                           />
