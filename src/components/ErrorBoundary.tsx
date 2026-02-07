@@ -1,4 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
+import { trackEvent } from '../services/analytics';
 
 interface Props {
   children?: ReactNode;
@@ -21,6 +22,14 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
+    
+    // Track error in analytics
+    trackEvent('Error', 'Runtime Error', `${error.message} - ${errorInfo.componentStack?.slice(0, 100)}`);
+    
+    // Optional: Send to error tracking service (Sentry, etc)
+    if (import.meta.env.PROD) {
+      // this.reportErrorToService(error, errorInfo);
+    }
   }
 
   public render() {
@@ -42,12 +51,21 @@ class ErrorBoundary extends Component<Props, State> {
 
             <button
                 onClick={() => {
-                    localStorage.removeItem('cms_profile'); // Clear potentially corrupted data
-                    window.location.reload();
+                    trackEvent('Error', 'Clear Cache', 'User cleared cache after error');
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = '/';
                 }}
-                className="w-full px-6 py-3 bg-primary text-background rounded-lg font-bold hover:opacity-90 transition-opacity"
+                className="w-full px-6 py-3 bg-primary text-background rounded-lg font-bold hover:opacity-90 transition-opacity mb-3"
             >
                 Clear Cache & Reload
+            </button>
+            
+            <button
+                onClick={() => window.location.href = '/'}
+                className="w-full px-6 py-3 border border-border bg-transparent text-primary rounded-lg font-medium hover:bg-surfaceHighlight transition-colors"
+            >
+                Go to Homepage
             </button>
           </div>
         </div>
