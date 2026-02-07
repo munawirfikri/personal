@@ -38,17 +38,31 @@ const Footer: React.FC = () => {
     e.preventDefault();
     if (validate()) {
       setIsSubmitting(true);
-      // Simulate API call
       try {
-        console.log("Submitting with captcha token:", captchaToken);
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/contact`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            captcha_token: captchaToken,
+          }),
+        });
+
+        if (!response.ok) throw new Error('Failed to send message');
+        
         setSubmitStatus('success');
         setFormData({ name: '', email: '', message: '' });
         setCaptchaToken(null);
         recaptchaRef.current?.reset();
         setTimeout(() => setSubmitStatus('idle'), 5000);
       } catch (error) {
+        console.error('Error sending message:', error);
         setSubmitStatus('error');
+        setTimeout(() => setSubmitStatus('idle'), 5000);
       } finally {
         setIsSubmitting(false);
       }
@@ -182,6 +196,12 @@ const Footer: React.FC = () => {
                           </span>
                         ) : t('form_send')}
                     </button>
+
+                    {submitStatus === 'error' && (
+                        <div className="p-4 bg-red-500/10 border border-red-500 rounded-lg text-red-500 text-sm animate-fade-in">
+                            Failed to send message. Please try again.
+                        </div>
+                    )}
 
                     {submitStatus === 'success' && (
                         <div className="absolute inset-0 bg-surfaceHighlight/95 backdrop-blur-sm flex items-center justify-center rounded-2xl animate-fade-in z-20">
