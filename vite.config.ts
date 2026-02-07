@@ -41,6 +41,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,jpg,svg}'],
+        navigateFallbackDenylist: [/^\/blog/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.mun\.my\.id\/api\/.*/i,
