@@ -5,6 +5,7 @@ import Hero from './components/Sections/Hero';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import PWAInstallBanner from './components/PWAInstallBanner';
+import { ExperienceSkeleton, ProjectsSkeleton, GenericSkeleton } from './components/SkeletonLoaders';
 import { initGA, trackPageView } from './services/analytics';
 
 const About = lazy(() => import('./components/Sections/About'));
@@ -57,11 +58,19 @@ const App: React.FC = () => {
         <Navbar />
         <main>
           <Hero />
-          <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>}>
+          <Suspense fallback={<GenericSkeleton />}>
             <About />
+          </Suspense>
+          <Suspense fallback={<ExperienceSkeleton />}>
             <Experience />
+          </Suspense>
+          <Suspense fallback={<ExperienceSkeleton />}>
             <Education />
+          </Suspense>
+          <Suspense fallback={<ProjectsSkeleton />}>
             <Projects />
+          </Suspense>
+          <Suspense fallback={<GenericSkeleton />}>
             <Instagram />
           </Suspense>
         </main>
