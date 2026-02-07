@@ -5,6 +5,7 @@ import Hero from './components/Sections/Hero';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import PWAInstallBanner from './components/PWAInstallBanner';
+import NotificationContainer from './components/NotificationContainer';
 import { ExperienceSkeleton, ProjectsSkeleton, GenericSkeleton } from './components/SkeletonLoaders';
 import { initGA, trackPageView } from './services/analytics';
 
@@ -54,6 +55,7 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <SEO />
+      <NotificationContainer />
       <div className="bg-background text-primary font-sans selection:bg-black selection:text-white">
         <Navbar />
         <main>
