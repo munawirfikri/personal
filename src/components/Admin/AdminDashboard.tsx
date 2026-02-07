@@ -1,37 +1,100 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useData } from '../../contexts/DataContext';
 
+// Debounce hook
+const useDebounce = (value: any, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  
+  return debouncedValue;
+};
+
 // Components for the specialized editors
-const InputGroup = ({ label, value, onChange, type = "text", as = "input" }: any) => (
-  <div className="mb-4">
-    <label className="block text-sm font-medium text-secondary mb-1">{label}</label>
-    {as === "textarea" ? (
-      <textarea 
-        className="w-full bg-background border border-border rounded p-2 text-primary focus:border-primary outline-none h-32"
-        value={value} onChange={e => onChange(e.target.value)}
-      />
-    ) : (
-      <input 
-        type={type}
-        className="w-full bg-background border border-border rounded p-2 text-primary focus:border-primary outline-none"
-        value={value} onChange={e => onChange(e.target.value)}
-      />
-    )}
-  </div>
-);
+const InputGroup = ({ label, value, onChange, onSave, type = "text", as = "input", autoSave = false }: any) => {
+  const [localValue, setLocalValue] = useState(value);
+  const [hasChanges, setHasChanges] = useState(false);
+  const debouncedValue = useDebounce(localValue, 1000);
+
+  useEffect(() => {
+    setLocalValue(value);
+    setHasChanges(false);
+  }, [value]);
+
+  useEffect(() => {
+    if (autoSave && debouncedValue !== value && hasChanges) {
+      onSave?.(debouncedValue);
+      setHasChanges(false);
+    }
+  }, [debouncedValue, value, hasChanges, onSave, autoSave]);
+
+  const handleChange = (newValue: string) => {
+    setLocalValue(newValue);
+    setHasChanges(true);
+    onChange?.(newValue);
+  };
+
+  const handleSave = () => {
+    if (hasChanges) {
+      onSave?.(localValue);
+      setHasChanges(false);
+    }
+  };
+
+  return (
+    <div className="mb-4">
+      <div className="flex justify-between items-center mb-1">
+        <label className="block text-sm font-medium text-secondary">
+          {label} {autoSave && hasChanges && <span className="text-yellow-500 text-xs">(saving...)</span>}
+        </label>
+        {!autoSave && hasChanges && (
+          <button 
+            onClick={handleSave}
+            className="text-xs bg-primary text-background px-2 py-1 rounded hover:opacity-80"
+          >
+            Save
+          </button>
+        )}
+      </div>
+      {as === "textarea" ? (
+        <textarea 
+          className="w-full bg-background border border-border rounded p-2 text-primary focus:border-primary outline-none h-32"
+          value={localValue} 
+          onChange={e => handleChange(e.target.value)}
+        />
+      ) : (
+        <input 
+          type={type}
+          className="w-full bg-background border border-border rounded p-2 text-primary focus:border-primary outline-none"
+          value={localValue} 
+          onChange={e => handleChange(e.target.value)}
+        />
+      )}
+    </div>
+  );
+};
 
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [activeTab, setActiveTab] = useState<'profile' | 'experience' | 'education' | 'projects'>('profile');
+  const [saveMode, setSaveMode] = useState<'auto' | 'manual'>('manual');
   
   const { 
     profile, updateProfile, 
-    experiences, updateExperiences,
-    education, updateEducation,
-    projects, updateProjects,
-    resetData
+    experiences, addExperience, updateExperience, deleteExperience,
+    education, addEducation, updateEducation, deleteEducation,
+    projects, addProject, updateProject, deleteProject,
+    resetData, loading
   } = useData();
 
   useEffect(() => {
@@ -43,12 +106,7 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault();
     setErrorMsg("");
     
-    // Robust check for environment variables with common prefixes
-    // This handles cases where the bundler filters variables not starting with VITE_ or REACT_APP_
-    const envPassword = 
-      process.env.CMS_PASSWORD || 
-      process.env.VITE_CMS_PASSWORD || 
-      process.env.REACT_APP_CMS_PASSWORD;
+    const envPassword = import.meta.env.VITE_CMS_PASSWORD;
 
     // Debugging aid for the developer
     console.log("CMS Login Debug:");
@@ -138,51 +196,110 @@ const AdminDashboard: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-6 md:p-12 overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-8 capitalize">{activeTab} Manager</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold capitalize">{activeTab} Manager</h2>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2 text-sm">
+              <input 
+                type="checkbox" 
+                checked={saveMode === 'auto'}
+                onChange={(e) => setSaveMode(e.target.checked ? 'auto' : 'manual')}
+                className="rounded"
+              />
+              Auto-save
+            </label>
+          </div>
+        </div>
         
         {/* Profile Editor */}
         {activeTab === 'profile' && (
           <div className="space-y-6 max-w-2xl bg-surface p-6 rounded-xl border border-border">
-             <InputGroup label="Full Name" value={profile.name} onChange={(v: string) => updateProfile({...profile, name: v})} />
-             <InputGroup label="Job Title" value={profile.title} onChange={(v: string) => updateProfile({...profile, title: v})} />
-             <InputGroup label="Tagline" value={profile.tagline} onChange={(v: string) => updateProfile({...profile, tagline: v})} />
-             <InputGroup label="Location" value={profile.location} onChange={(v: string) => updateProfile({...profile, location: v})} />
-             <InputGroup label="About Me" value={profile.about} onChange={(v: string) => updateProfile({...profile, about: v})} as="textarea" />
+             <InputGroup 
+               label="Full Name" 
+               value={profile.name} 
+               onSave={(v: string) => updateProfile({...profile, name: v})}
+               autoSave={saveMode === 'auto'}
+             />
+             <InputGroup 
+               label="Job Title" 
+               value={profile.title} 
+               onSave={(v: string) => updateProfile({...profile, title: v})}
+               autoSave={saveMode === 'auto'}
+             />
+             <InputGroup 
+               label="Tagline" 
+               value={profile.tagline} 
+               onSave={(v: string) => updateProfile({...profile, tagline: v})}
+               autoSave={saveMode === 'auto'}
+             />
+             <InputGroup 
+               label="Location" 
+               value={profile.location} 
+               onSave={(v: string) => updateProfile({...profile, location: v})}
+               autoSave={saveMode === 'auto'}
+             />
+             <InputGroup 
+               label="About Me" 
+               value={profile.about} 
+               onSave={(v: string) => updateProfile({...profile, about: v})}
+               autoSave={saveMode === 'auto'}
+               as="textarea" 
+             />
           </div>
         )}
 
         {/* Experience Editor */}
         {activeTab === 'experience' && (
           <div className="space-y-8">
-            {experiences.map((exp, idx) => (
-              <div key={exp.id} className="bg-surface p-6 rounded-xl border border-border relative group">
-                <button 
-                  onClick={() => {
-                    const newExps = experiences.filter((_, i) => i !== idx);
-                    updateExperiences(newExps);
-                  }}
-                  className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  Delete
-                </button>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputGroup label="Role" value={exp.role} onChange={(v: string) => {
-                    const newExp = [...experiences]; newExp[idx].role = v; updateExperiences(newExp);
-                  }} />
-                  <InputGroup label="Company" value={exp.company} onChange={(v: string) => {
-                    const newExp = [...experiences]; newExp[idx].company = v; updateExperiences(newExp);
-                  }} />
-                  <InputGroup label="Period" value={exp.period} onChange={(v: string) => {
-                    const newExp = [...experiences]; newExp[idx].period = v; updateExperiences(newExp);
-                  }} />
+            {loading ? (
+              <div className="text-center py-8">Loading...</div>
+            ) : (
+              experiences.map((exp) => (
+                <div key={exp.id} className="bg-surface p-6 rounded-xl border border-border relative group">
+                  <button 
+                    onClick={() => deleteExperience(exp.id)}
+                    className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    Delete
+                  </button>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <InputGroup 
+                      label="Role" 
+                      value={exp.role} 
+                      onSave={(v: string) => updateExperience(exp.id, { role: v })}
+                      autoSave={saveMode === 'auto'}
+                    />
+                    <InputGroup 
+                      label="Company" 
+                      value={exp.company} 
+                      onSave={(v: string) => updateExperience(exp.id, { company: v })}
+                      autoSave={saveMode === 'auto'}
+                    />
+                    <InputGroup 
+                      label="Period" 
+                      value={exp.period} 
+                      onSave={(v: string) => updateExperience(exp.id, { period: v })}
+                      autoSave={saveMode === 'auto'}
+                    />
+                  </div>
+                  <InputGroup 
+                    label="Description" 
+                    value={exp.description} 
+                    onSave={(v: string) => updateExperience(exp.id, { description: v })}
+                    autoSave={saveMode === 'auto'}
+                    as="textarea" 
+                  />
                 </div>
-                <InputGroup label="Description" value={exp.description} onChange={(v: string) => {
-                   const newExp = [...experiences]; newExp[idx].description = v; updateExperiences(newExp);
-                }} as="textarea" />
-              </div>
-            ))}
+              ))
+            )}
             <button 
-              onClick={() => updateExperiences([{ id: Date.now().toString(), role: 'New Role', company: 'New Company', period: '2024', description: 'Description', technologies: [] }, ...experiences])}
+              onClick={() => addExperience({ 
+                role: 'New Role', 
+                company: 'New Company', 
+                period: '2024', 
+                description: 'Description', 
+                technologies: [] 
+              })}
               className="w-full py-4 border-2 border-dashed border-border rounded-xl text-secondary hover:border-primary hover:text-primary transition-all"
             >
               + Add New Experience
@@ -193,38 +310,55 @@ const AdminDashboard: React.FC = () => {
         {/* Education Editor */}
         {activeTab === 'education' && (
            <div className="space-y-8">
-           {education.map((edu, idx) => (
-             <div key={edu.id} className="bg-surface p-6 rounded-xl border border-border relative group">
-               <button 
-                 onClick={() => {
-                   const newEdu = education.filter((_, i) => i !== idx);
-                   updateEducation(newEdu);
-                 }}
-                 className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-               >
-                 Delete
-               </button>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <InputGroup label="School" value={edu.school} onChange={(v: string) => {
-                   const n = [...education]; n[idx].school = v; updateEducation(n);
-                 }} />
-                 <InputGroup label="Degree" value={edu.degree} onChange={(v: string) => {
-                   const n = [...education]; n[idx].degree = v; updateEducation(n);
-                 }} />
-                 <InputGroup label="Year" value={edu.year} onChange={(v: string) => {
-                   const n = [...education]; n[idx].year = v; updateEducation(n);
-                 }} />
-                 <InputGroup label="GPA" value={edu.gpa || ''} onChange={(v: string) => {
-                   const n = [...education]; n[idx].gpa = v; updateEducation(n);
-                 }} />
+           {loading ? (
+             <div className="text-center py-8">Loading...</div>
+           ) : (
+             education.map((edu) => (
+               <div key={edu.id} className="bg-surface p-6 rounded-xl border border-border relative group">
+                 <button 
+                   onClick={() => deleteEducation(edu.id)}
+                   className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                 >
+                   Delete
+                 </button>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <InputGroup 
+                     label="School" 
+                     value={edu.school} 
+                     onSave={(v: string) => updateEducation(edu.id, { school: v })}
+                   />
+                   <InputGroup 
+                     label="Degree" 
+                     value={edu.degree} 
+                     onSave={(v: string) => updateEducation(edu.id, { degree: v })}
+                   />
+                   <InputGroup 
+                     label="Year" 
+                     value={edu.year} 
+                     onSave={(v: string) => updateEducation(edu.id, { year: v })}
+                   />
+                   <InputGroup 
+                     label="GPA" 
+                     value={edu.gpa || ''} 
+                     onSave={(v: string) => updateEducation(edu.id, { gpa: v })}
+                   />
+                 </div>
+                 <InputGroup 
+                   label="Description" 
+                   value={edu.description || ''} 
+                   onSave={(v: string) => updateEducation(edu.id, { description: v })}
+                   as="textarea" 
+                 />
                </div>
-               <InputGroup label="Description" value={edu.description || ''} onChange={(v: string) => {
-                  const n = [...education]; n[idx].description = v; updateEducation(n);
-               }} as="textarea" />
-             </div>
-           ))}
+             ))
+           )}
            <button 
-             onClick={() => updateEducation([{ id: Date.now().toString(), school: 'New University', degree: 'Bachelor', field: 'CS', year: '2024' }, ...education])}
+             onClick={() => addEducation({ 
+               school: 'New University', 
+               degree: 'Bachelor', 
+               field: 'CS', 
+               year: '2024' 
+             })}
              className="w-full py-4 border-2 border-dashed border-border rounded-xl text-secondary hover:border-primary hover:text-primary transition-all"
            >
              + Add New Education
@@ -235,31 +369,44 @@ const AdminDashboard: React.FC = () => {
         {/* Projects Editor */}
         {activeTab === 'projects' && (
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           {projects.map((proj, idx) => (
-             <div key={proj.id} className="bg-surface p-6 rounded-xl border border-border relative group">
-               <button 
-                 onClick={() => {
-                   const n = projects.filter((_, i) => i !== idx);
-                   updateProjects(n);
-                 }}
-                 className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-               >
-                 Delete
-               </button>
-               
-               <InputGroup label="Title" value={proj.title} onChange={(v: string) => {
-                 const n = [...projects]; n[idx].title = v; updateProjects(n);
-               }} />
-               <InputGroup label="Image URL" value={proj.imageUrl} onChange={(v: string) => {
-                 const n = [...projects]; n[idx].imageUrl = v; updateProjects(n);
-               }} />
-               <InputGroup label="Description" value={proj.description} onChange={(v: string) => {
-                  const n = [...projects]; n[idx].description = v; updateProjects(n);
-               }} as="textarea" />
-             </div>
-           ))}
+           {loading ? (
+             <div className="col-span-full text-center py-8">Loading...</div>
+           ) : (
+             projects.map((proj) => (
+               <div key={proj.id} className="bg-surface p-6 rounded-xl border border-border relative group">
+                 <button 
+                   onClick={() => deleteProject(proj.id)}
+                   className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                 >
+                   Delete
+                 </button>
+                 
+                 <InputGroup 
+                   label="Title" 
+                   value={proj.title} 
+                   onSave={(v: string) => updateProject(proj.id, { title: v })}
+                 />
+                 <InputGroup 
+                   label="Image URL" 
+                   value={proj.imageUrl} 
+                   onSave={(v: string) => updateProject(proj.id, { image_url: v })}
+                 />
+                 <InputGroup 
+                   label="Description" 
+                   value={proj.description} 
+                   onSave={(v: string) => updateProject(proj.id, { description: v })}
+                   as="textarea" 
+                 />
+               </div>
+             ))
+           )}
            <button 
-             onClick={() => updateProjects([{ id: Date.now().toString(), title: 'New Project', description: 'Description', imageUrl: 'https://via.placeholder.com/600', tags: [] }, ...projects])}
+             onClick={() => addProject({ 
+               title: 'New Project', 
+               description: 'Description', 
+               imageUrl: 'https://via.placeholder.com/600', 
+               tags: [] 
+             })}
              className="flex flex-col items-center justify-center min-h-[300px] border-2 border-dashed border-border rounded-xl text-secondary hover:border-primary hover:text-primary transition-all"
            >
              <span className="text-2xl mb-2">+</span>

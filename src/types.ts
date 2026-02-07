@@ -8,6 +8,7 @@ export interface Experience {
   period: string;
   description: string;
   technologies: string[];
+  language?: string;
 }
 
 export interface Education {
@@ -18,7 +19,8 @@ export interface Education {
   year: string;
   gpa?: string;
   description?: string;
-  logoUrl?: string; // Optional logo placeholder
+  logoUrl?: string;
+  language?: string;
 }
 
 export interface Project {
@@ -29,6 +31,7 @@ export interface Project {
   tags: string[];
   link?: string;
   github?: string;
+  language?: string;
 }
 
 export interface Skill {

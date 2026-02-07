@@ -4,7 +4,7 @@ import { SectionId, InstagramMedia } from '../../types';
 import { useData } from '../../contexts/DataContext';
 
 // NOTE: To make this work with real data, you need to generate an Instagram Basic Display Access Token
-// and add it to your environment variables as REACT_APP_INSTAGRAM_TOKEN or process.env.INSTAGRAM_TOKEN
+// and add it to your environment variables as VITE_INSTAGRAM_TOKEN
 // Tutorial: https://developers.facebook.com/docs/instagram-basic-display-api/
 
 const MOCK_INSTAGRAM_FEED: InstagramMedia[] = [
@@ -49,8 +49,8 @@ const Instagram: React.FC = () => {
 
   useEffect(() => {
     const fetchInstagramPhotos = async () => {
-      // In a real scenario, use process.env.INSTAGRAM_TOKEN
-      const accessToken = process.env.INSTAGRAM_TOKEN; 
+      // In a real scenario, use import.meta.env.VITE_INSTAGRAM_TOKEN
+      const accessToken = import.meta.env.VITE_INSTAGRAM_TOKEN; 
       
       if (!accessToken) {
         // Fallback to mock data if no token is provided

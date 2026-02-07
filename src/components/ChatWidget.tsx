@@ -33,8 +33,8 @@ const ChatWidget: React.FC = () => {
     setIsLoading(false);
   };
 
-  if (!process.env.API_KEY) {
-    // Hide chat widget if no API Key provided
+  if (!import.meta.env.VITE_API_BASE_URL) {
+    // Hide chat widget if no API configured
     return null;
   }
 

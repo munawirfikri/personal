@@ -1,20 +1,39 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Portfolio Frontend
 
-# Run and deploy your AI Studio app
+Portfolio website Munawir Fikri dengan integrasi backend Laravel API.
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1SGcOpvho0pit4S0DSP8aOz6HoN18MKQ2
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
+## Setup
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm install
+```
+
+2. Start backend server:
+```bash
+cd ../backend
+php artisan serve
+```
+
+3. Start frontend:
+```bash
+npm run dev
+```
+
+## Features
+
+- **Multi-language support** (English, Indonesian, Malay)
+- **Real-time admin panel** dengan CRUD operations
+- **API integration** dengan Laravel backend
+- **Responsive design**
+- **AI Chat widget** dengan Gemini
+
+## Admin Panel
+
+Akses admin panel di `/#admin` untuk mengelola:
+- Profile information
+- Work experiences
+- Education history
+- Projects portfolio
+
+Data akan tersimpan di database PostgreSQL melalui Laravel API.
