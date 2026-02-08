@@ -171,6 +171,9 @@ const Hero: React.FC = () => {
                   src="/img/munawirfikri-1.jpg" 
                   alt={fullName}
                   loading="eager"
+                  fetchpriority="high"
+                  width="450"
+                  height="550"
                   className="w-full h-full object-cover filter grayscale contrast-110 brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105"
                 />
                 
