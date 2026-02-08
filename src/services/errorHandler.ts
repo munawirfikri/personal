@@ -17,9 +17,11 @@ export const setupGlobalErrorHandlers = () => {
 
   // Handle global errors
   window.addEventListener('error', (event) => {
-    // Ignore Google extension errors
+    // Ignore Google extension errors and browser extension errors
     if (event.message?.includes('cross-origin') || 
-        event.filename?.includes('chrome-extension://')) {
+        event.filename?.includes('chrome-extension://') ||
+        event.filename?.includes('autoPip.js') ||
+        event.message?.includes('MediaSession')) {
       return;
     }
     
