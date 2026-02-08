@@ -20,3 +20,8 @@ root.render(
     </DataProvider>
   </React.StrictMode>
 );
+
+// Remove FOUC prevention
+setTimeout(() => {
+  rootElement.classList.add('loaded');
+}, 100);
