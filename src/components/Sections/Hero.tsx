@@ -167,15 +167,18 @@ const Hero: React.FC = () => {
               
               {/* Main Image */}
               <div className="relative h-full w-full overflow-hidden rounded-[2rem] shadow-2xl border border-border bg-surfaceHighlight">
-                <img 
-                  src="/img/munawirfikri-1.jpg" 
-                  alt={fullName}
-                  loading="eager"
-                  fetchpriority="high"
-                  width="450"
-                  height="550"
-                  className="w-full h-full object-cover filter grayscale contrast-110 brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105"
-                />
+                <picture>
+                  <source srcSet="/img/munawirfikri-1.webp" type="image/webp" />
+                  <img 
+                    src="/img/munawirfikri-1.jpg" 
+                    alt={fullName}
+                    loading="eager"
+                    fetchpriority="high"
+                    width="450"
+                    height="550"
+                    className="w-full h-full object-cover filter grayscale contrast-110 brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105"
+                  />
+                </picture>
                 
                 {/* Overlay Texture */}
                 <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none"></div>
