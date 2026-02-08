@@ -50,6 +50,7 @@ const Navbar: React.FC = () => {
     { label: t('nav_experience'), href: `#${SectionId.EXPERIENCE}` },
     { label: t('nav_education'), href: `#${SectionId.EDUCATION}` },
     { label: t('nav_projects'), href: `#${SectionId.PROJECTS}` },
+    { label: 'Blog', href: 'https://mun.my.id/blog' },
     { label: t('nav_contact'), href: `#${SectionId.CONTACT}` },
   ];
 
@@ -77,7 +78,7 @@ const Navbar: React.FC = () => {
           {navLinks.map((link) => (
             <a 
               key={link.href} 
-              href={link.href} 
+              href={link.href}
               className="text-sm font-medium text-secondary hover:text-primary transition-colors"
             >
               {link.label}
@@ -194,7 +195,7 @@ const Navbar: React.FC = () => {
            {navLinks.map((link) => (
             <a 
               key={link.href} 
-              href={link.href} 
+              href={link.href}
               className="text-lg font-medium text-secondary hover:text-primary"
               onClick={() => setIsMobileMenuOpen(false)}
             >
