@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { DataProvider } from './contexts/DataContext';
 import { setupGlobalErrorHandlers } from './services/errorHandler';
+import './index.css';
 
 setupGlobalErrorHandlers();
 

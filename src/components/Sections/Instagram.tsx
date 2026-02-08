@@ -3,10 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { SectionId, InstagramMedia } from '../../types';
 import { useData } from '../../contexts/DataContext';
 
-// NOTE: To make this work with real data, you need to generate an Instagram Basic Display Access Token
-// and add it to your environment variables as VITE_INSTAGRAM_TOKEN
-// Tutorial: https://developers.facebook.com/docs/instagram-basic-display-api/
-
 const MOCK_INSTAGRAM_FEED: InstagramMedia[] = [
   {
     id: '1',
@@ -43,17 +39,14 @@ const Instagram: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { t } = useData();
   
-  // Replace with your specific Instagram ID or Username for display purposes
   const INSTAGRAM_USERNAME = "munawirfikri";
   const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_USERNAME}/`;
 
   useEffect(() => {
     const fetchInstagramPhotos = async () => {
-      // In a real scenario, use import.meta.env.VITE_INSTAGRAM_TOKEN
       const accessToken = import.meta.env.VITE_INSTAGRAM_TOKEN; 
       
-      if (!accessToken) {
-        // Fallback to mock data if no token is provided
+      if (!accessToken || accessToken === 'your_instagram_token_here') {
         setPosts(MOCK_INSTAGRAM_FEED);
         setLoading(false);
         return;
@@ -69,7 +62,6 @@ const Instagram: React.FC = () => {
         const data = await response.json();
         setPosts(data.data);
       } catch (error) {
-        console.error("Instagram fetch error, using fallback:", error);
         setPosts(MOCK_INSTAGRAM_FEED);
       } finally {
         setLoading(false);
