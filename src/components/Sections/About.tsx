@@ -37,11 +37,16 @@ const About: React.FC = () => {
           <div className="relative order-1 md:order-2">
             {/* Image Container */}
             <div className="aspect-[3/4] md:aspect-square rounded-2xl overflow-hidden bg-surfaceHighlight border border-border relative group shadow-2xl transition-all duration-500 hover:shadow-xl hover:shadow-primary/5">
-              <img 
-                src="/img/munawirfikri-2.jpg" 
-                alt="Munawir Fikri Al-Akbari" 
-                className="object-cover object-top w-full h-full transition-transform duration-700 group-hover:scale-105 filter grayscale hover:grayscale-0"
-              />
+              <picture>
+                <source srcSet="/img/munawirfikri-2.webp" type="image/webp" />
+                <img 
+                  src="/img/munawirfikri-2.jpg" 
+                  alt="Munawir Fikri Al-Akbari"
+                  width="600"
+                  height="800" 
+                  className="object-cover object-top w-full h-full transition-transform duration-700 group-hover:scale-105 filter grayscale hover:grayscale-0"
+                />
+              </picture>
               
               {/* Overlay Gradient (Keep text white here as it is on top of image) */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-90"></div>
