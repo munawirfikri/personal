@@ -15,7 +15,7 @@ export default defineConfig({
       devOptions: {
         enabled: false
       },
-      includeAssets: ['img/**/*', 'favicon.ico'],
+      includeAssets: ['img/**/*', 'favicon.ico', 'sitemap.xml', 'sitemap.html'],
       manifest: {
         name: 'Munawir Fikri Portfolio',
         short_name: 'Mun Portfolio',
