@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useData } from '../../contexts/DataContext';
 import { authApi } from '../../services/portfolioApi';
 import { useNotification } from '../../hooks/useNotification';
+import { EditorCard } from './EditorCard';
+import { InputGroupProps, TagsInputProps, ImagePreviewProps, SaveMode, TabType } from './types';
 
 // Debounce hook
 const useDebounce = (value: any, delay: number) => {
@@ -21,31 +23,45 @@ const useDebounce = (value: any, delay: number) => {
 };
 
 // Components for the specialized editors
-const InputGroup = ({ label, value, onChange, onSave, type = "text", as = "input", autoSave = false }: any) => {
+const InputGroup: React.FC<InputGroupProps> = ({ label, value, onChange, onSave, type = "text", as = "input", autoSave = false, required = false }) => {
   const [localValue, setLocalValue] = useState(value);
   const [hasChanges, setHasChanges] = useState(false);
+  const [error, setError] = useState('');
   const debouncedValue = useDebounce(localValue, 1000);
 
   useEffect(() => {
     setLocalValue(value);
     setHasChanges(false);
+    setError('');
   }, [value]);
 
   useEffect(() => {
-    if (autoSave && debouncedValue !== value && hasChanges) {
+    if (autoSave && debouncedValue !== value && hasChanges && !error) {
       onSave?.(debouncedValue);
       setHasChanges(false);
     }
-  }, [debouncedValue, value, hasChanges, onSave, autoSave]);
+  }, [debouncedValue, value, hasChanges, onSave, autoSave, error]);
 
   const handleChange = (newValue: string) => {
     setLocalValue(newValue);
     setHasChanges(true);
+    
+    if (required && !newValue.trim()) {
+      setError('This field is required');
+    } else {
+      setError('');
+    }
+    
     onChange?.(newValue);
   };
 
   const handleSave = () => {
-    if (hasChanges) {
+    if (required && !localValue.trim()) {
+      setError('This field is required');
+      return;
+    }
+    
+    if (hasChanges && !error) {
       onSave?.(localValue);
       setHasChanges(false);
     }
@@ -55,12 +71,13 @@ const InputGroup = ({ label, value, onChange, onSave, type = "text", as = "input
     <div className="mb-4">
       <div className="flex justify-between items-center mb-1">
         <label className="block text-sm font-medium text-secondary">
-          {label} {autoSave && hasChanges && <span className="text-yellow-500 text-xs">(saving...)</span>}
+          {label} {required && <span className="text-red-500">*</span>} {autoSave && hasChanges && <span className="text-yellow-500 text-xs">(saving...)</span>}
         </label>
         {!autoSave && hasChanges && (
           <button 
             onClick={handleSave}
-            className="text-xs bg-primary text-background px-2 py-1 rounded hover:opacity-80"
+            disabled={!!error}
+            className="text-xs bg-primary text-background px-2 py-1 rounded hover:opacity-80 disabled:opacity-50"
           >
             Save
           </button>
@@ -68,23 +85,28 @@ const InputGroup = ({ label, value, onChange, onSave, type = "text", as = "input
       </div>
       {as === "textarea" ? (
         <textarea 
-          className="w-full bg-background border border-border rounded p-2 text-primary focus:border-primary outline-none h-32"
+          className={`w-full bg-background border rounded p-2 text-primary focus:border-primary outline-none h-32 ${
+            error ? 'border-red-500' : 'border-border'
+          }`}
           value={localValue} 
           onChange={e => handleChange(e.target.value)}
         />
       ) : (
         <input 
           type={type}
-          className="w-full bg-background border border-border rounded p-2 text-primary focus:border-primary outline-none"
+          className={`w-full bg-background border rounded p-2 text-primary focus:border-primary outline-none ${
+            error ? 'border-red-500' : 'border-border'
+          }`}
           value={localValue} 
           onChange={e => handleChange(e.target.value)}
         />
       )}
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 };
 
-const TagsInput = ({ label, value = [], onSave }: { label: string; value: string[]; onSave: (tags: string[]) => void }) => {
+const TagsInput: React.FC<TagsInputProps> = ({ label, value = [], onSave }) => {
   const [tags, setTags] = useState<string[]>(value);
   const [input, setInput] = useState('');
 
@@ -138,13 +160,47 @@ const TagsInput = ({ label, value = [], onSave }: { label: string; value: string
   );
 };
 
+const ImagePreview: React.FC<ImagePreviewProps> = ({ url }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  if (!url) return null;
+
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-secondary mb-1">Preview</label>
+      <div className="relative w-full h-48 bg-surface rounded-lg overflow-hidden border border-border">
+        {!loaded && !error && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        )}
+        {error ? (
+          <div className="absolute inset-0 flex items-center justify-center text-secondary text-sm">
+            Failed to load image
+          </div>
+        ) : (
+          <img 
+            src={url} 
+            alt="Preview"
+            className="w-full h-full object-cover"
+            onLoad={() => setLoaded(true)}
+            onError={() => setError(true)}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'profile' | 'experience' | 'education' | 'projects'>('profile');
-  const [saveMode, setSaveMode] = useState<'auto' | 'manual'>('manual');
+  const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const [saveMode, setSaveMode] = useState<SaveMode>('manual');
   const { notifications, show } = useNotification();
   
   const { 
@@ -195,11 +251,14 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handleSave = async (fn: () => Promise<any>, successMsg: string) => {
+    setSaving(true);
     try {
       await fn();
       show(successMsg, 'success');
     } catch (error: any) {
       show(error.response?.data?.message || 'Operation failed', 'error');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -287,7 +346,16 @@ const AdminDashboard: React.FC = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-12 overflow-y-auto">
+      <main className="flex-1 p-6 md:p-12 overflow-y-auto relative">
+        {saving && (
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-40">
+            <div className="bg-surface px-6 py-4 rounded-lg shadow-xl flex items-center gap-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              <span className="text-primary font-medium">Saving...</span>
+            </div>
+          </div>
+        )}
+        
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold capitalize">{activeTab} Manager</h2>
           <div className="flex items-center gap-4">
@@ -300,6 +368,9 @@ const AdminDashboard: React.FC = () => {
               />
               Auto-save
             </label>
+            <div className="text-xs text-secondary">
+              Tip: Use Ctrl+Z to undo, Ctrl+Shift+Z to redo
+            </div>
           </div>
         </div>
         
@@ -314,6 +385,7 @@ const AdminDashboard: React.FC = () => {
                  'Profile updated'
                )}
                autoSave={saveMode === 'auto'}
+               required
              />
              <InputGroup 
                label="Job Title" 
@@ -323,6 +395,7 @@ const AdminDashboard: React.FC = () => {
                  'Profile updated'
                )}
                autoSave={saveMode === 'auto'}
+               required
              />
              <InputGroup 
                label="Tagline" 
@@ -357,175 +430,54 @@ const AdminDashboard: React.FC = () => {
 
         {/* Experience Editor */}
         {activeTab === 'experience' && (
-          <div className="space-y-8">
-            {dataLoading ? (
-              <div className="text-center py-8">Loading...</div>
-            ) : (
-              experiences.map((exp) => (
-                <div key={exp.id} className="bg-surface p-6 rounded-xl border border-border relative group">
-                  <button 
-                    onClick={() => {
-                      if (confirm(`Delete "${exp.role}" at ${exp.company}?`)) {
-                        handleSave(
-                          () => deleteExperience(exp.id),
-                          'Experience deleted'
-                        );
-                      }
-                    }}
-                    className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    Delete
-                  </button>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputGroup 
-                      label="Role" 
-                      value={exp.role} 
-                      onSave={(v: string) => handleSave(
-                        () => updateExperience(exp.id, { role: v }),
-                        'Experience updated'
-                      )}
-                      autoSave={saveMode === 'auto'}
-                    />
-                    <InputGroup 
-                      label="Company" 
-                      value={exp.company} 
-                      onSave={(v: string) => handleSave(
-                        () => updateExperience(exp.id, { company: v }),
-                        'Experience updated'
-                      )}
-                      autoSave={saveMode === 'auto'}
-                    />
-                    <InputGroup 
-                      label="Period" 
-                      value={exp.period} 
-                      onSave={(v: string) => handleSave(
-                        () => updateExperience(exp.id, { period: v }),
-                        'Experience updated'
-                      )}
-                      autoSave={saveMode === 'auto'}
-                    />
-                  </div>
-                  <InputGroup 
-                    label="Description" 
-                    value={exp.description} 
-                    onSave={(v: string) => handleSave(
-                      () => updateExperience(exp.id, { description: v }),
-                      'Experience updated'
-                    )}
-                    autoSave={saveMode === 'auto'}
-                    as="textarea" 
-                  />
-                  <TagsInput 
-                    label="Technologies"
-                    value={exp.technologies}
-                    onSave={(tags: string[]) => handleSave(
-                      () => updateExperience(exp.id, { technologies: tags }),
-                      'Technologies updated'
-                    )}
-                  />
-                </div>
-              ))
+          <EditorCard
+            items={experiences}
+            loading={dataLoading}
+            onDelete={(id) => handleSave(() => deleteExperience(id), 'Experience deleted')}
+            onAdd={() => handleSave(
+              () => addExperience({ role: 'New Role', company: 'New Company', period: '2024', description: 'Description', technologies: [] }),
+              'Experience added'
             )}
-            <button 
-              onClick={() => handleSave(
-                () => addExperience({ 
-                  role: 'New Role', 
-                  company: 'New Company', 
-                  period: '2024', 
-                  description: 'Description', 
-                  technologies: [] 
-                }),
-                'Experience added'
-              )}
-              className="w-full py-4 border-2 border-dashed border-border rounded-xl text-secondary hover:border-primary hover:text-primary transition-all"
-            >
-              + Add New Experience
-            </button>
-          </div>
+            addButtonText="+ Add New Experience"
+            getItemName={(exp) => `${exp.role} at ${exp.company}`}
+            renderFields={(exp) => (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputGroup label="Role" value={exp.role} onSave={(v: string) => handleSave(() => updateExperience(exp.id, { role: v }), 'Experience updated')} autoSave={saveMode === 'auto'} required />
+                  <InputGroup label="Company" value={exp.company} onSave={(v: string) => handleSave(() => updateExperience(exp.id, { company: v }), 'Experience updated')} autoSave={saveMode === 'auto'} required />
+                  <InputGroup label="Period" value={exp.period} onSave={(v: string) => handleSave(() => updateExperience(exp.id, { period: v }), 'Experience updated')} autoSave={saveMode === 'auto'} required />
+                </div>
+                <InputGroup label="Description" value={exp.description} onSave={(v: string) => handleSave(() => updateExperience(exp.id, { description: v }), 'Experience updated')} autoSave={saveMode === 'auto'} as="textarea" />
+                <TagsInput label="Technologies" value={exp.technologies} onSave={(tags: string[]) => handleSave(() => updateExperience(exp.id, { technologies: tags }), 'Technologies updated')} />
+              </>
+            )}
+          />
         )}
 
         {/* Education Editor */}
         {activeTab === 'education' && (
-           <div className="space-y-8">
-           {dataLoading ? (
-             <div className="text-center py-8">Loading...</div>
-           ) : (
-             education.map((edu) => (
-               <div key={edu.id} className="bg-surface p-6 rounded-xl border border-border relative group">
-                 <button 
-                   onClick={() => {
-                     if (confirm(`Delete "${edu.degree}" from ${edu.school}?`)) {
-                       handleSave(
-                         () => deleteEducation(edu.id),
-                         'Education deleted'
-                       );
-                     }
-                   }}
-                   className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                 >
-                   Delete
-                 </button>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                   <InputGroup 
-                     label="School" 
-                     value={edu.school} 
-                     onSave={(v: string) => handleSave(
-                       () => updateEducation(edu.id, { school: v }),
-                       'Education updated'
-                     )}
-                   />
-                   <InputGroup 
-                     label="Degree" 
-                     value={edu.degree} 
-                     onSave={(v: string) => handleSave(
-                       () => updateEducation(edu.id, { degree: v }),
-                       'Education updated'
-                     )}
-                   />
-                   <InputGroup 
-                     label="Year" 
-                     value={edu.year} 
-                     onSave={(v: string) => handleSave(
-                       () => updateEducation(edu.id, { year: v }),
-                       'Education updated'
-                     )}
-                   />
-                   <InputGroup 
-                     label="GPA" 
-                     value={edu.gpa || ''} 
-                     onSave={(v: string) => handleSave(
-                       () => updateEducation(edu.id, { gpa: v }),
-                       'Education updated'
-                     )}
-                   />
-                 </div>
-                 <InputGroup 
-                   label="Description" 
-                   value={edu.description || ''} 
-                   onSave={(v: string) => handleSave(
-                     () => updateEducation(edu.id, { description: v }),
-                     'Education updated'
-                   )}
-                   as="textarea" 
-                 />
-               </div>
-             ))
-           )}
-           <button 
-             onClick={() => handleSave(
-               () => addEducation({ 
-                 school: 'New University', 
-                 degree: 'Bachelor', 
-                 field: 'CS', 
-                 year: '2024' 
-               }),
-               'Education added'
-             )}
-             className="w-full py-4 border-2 border-dashed border-border rounded-xl text-secondary hover:border-primary hover:text-primary transition-all"
-           >
-             + Add New Education
-           </button>
-         </div>
+          <EditorCard
+            items={education}
+            loading={dataLoading}
+            onDelete={(id) => handleSave(() => deleteEducation(id), 'Education deleted')}
+            onAdd={() => handleSave(
+              () => addEducation({ school: 'New University', degree: 'Bachelor', field: 'CS', year: '2024' }),
+              'Education added'
+            )}
+            addButtonText="+ Add New Education"
+            getItemName={(edu) => `${edu.degree} from ${edu.school}`}
+            renderFields={(edu) => (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputGroup label="School" value={edu.school} onSave={(v: string) => handleSave(() => updateEducation(edu.id, { school: v }), 'Education updated')} autoSave={saveMode === 'auto'} required />
+                  <InputGroup label="Degree" value={edu.degree} onSave={(v: string) => handleSave(() => updateEducation(edu.id, { degree: v }), 'Education updated')} autoSave={saveMode === 'auto'} required />
+                  <InputGroup label="Year" value={edu.year} onSave={(v: string) => handleSave(() => updateEducation(edu.id, { year: v }), 'Education updated')} autoSave={saveMode === 'auto'} required />
+                  <InputGroup label="GPA" value={edu.gpa || ''} onSave={(v: string) => handleSave(() => updateEducation(edu.id, { gpa: v }), 'Education updated')} autoSave={saveMode === 'auto'} />
+                </div>
+                <InputGroup label="Description" value={edu.description || ''} onSave={(v: string) => handleSave(() => updateEducation(edu.id, { description: v }), 'Education updated')} autoSave={saveMode === 'auto'} as="textarea" />
+              </>
+            )}
+          />
         )}
 
         {/* Projects Editor */}
@@ -557,6 +509,8 @@ const AdminDashboard: React.FC = () => {
                      () => updateProject(proj.id, { title: v }),
                      'Project updated'
                    )}
+                   autoSave={saveMode === 'auto'}
+                   required
                  />
                  <InputGroup 
                    label="Image URL" 
@@ -565,7 +519,10 @@ const AdminDashboard: React.FC = () => {
                      () => updateProject(proj.id, { image_url: v }),
                      'Project updated'
                    )}
+                   autoSave={saveMode === 'auto'}
+                   required
                  />
+                 <ImagePreview url={proj.imageUrl} />
                  <InputGroup 
                    label="Description" 
                    value={proj.description} 
@@ -573,6 +530,7 @@ const AdminDashboard: React.FC = () => {
                      () => updateProject(proj.id, { description: v }),
                      'Project updated'
                    )}
+                   autoSave={saveMode === 'auto'}
                    as="textarea" 
                  />
                  <TagsInput 
