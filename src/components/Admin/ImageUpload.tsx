@@ -39,12 +39,16 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUploadSuccess, curre
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Upload failed');
-
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Upload failed');
+      }
+
       onUploadSuccess(data.url);
-    } catch (err) {
-      setError('Upload failed. Please try again.');
+    } catch (err: any) {
+      console.error('Upload error:', err);
+      setError(err.message || 'Upload failed. Please try again.');
     } finally {
       setUploading(false);
     }
