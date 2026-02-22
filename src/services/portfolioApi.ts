@@ -11,6 +11,40 @@ const api = axios.create({
   },
 });
 
+// Add token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('admin_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Handle 401 errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('admin_token');
+      if (window.location.hash === '#admin') {
+        window.location.reload();
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const authApi = {
+  login: (password: string) =>
+    api.post('/auth/login', { password }).then(res => res.data),
+  
+  logout: () =>
+    api.post('/auth/logout'),
+  
+  verify: () =>
+    api.get('/auth/verify'),
+};
+
 export const portfolioApi = {
   // Experiences
   getExperiences: (lang: string = 'en'): Promise<Experience[]> =>
