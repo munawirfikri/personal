@@ -74,7 +74,7 @@ export const portfolioApi = {
 
   // Projects
   getProjects: (lang: string = 'en'): Promise<Project[]> =>
-    api.get(`/projects?language=${lang}`).then(res => 
+    api.get(`/projects?lang=${lang}`).then(res => 
       res.data.map((p: any) => ({
         ...p,
         imageUrl: p.image_url,
@@ -83,10 +83,24 @@ export const portfolioApi = {
     ),
   
   createProject: (data: Omit<Project, 'id'>): Promise<Project> =>
-    api.post('/projects', data).then(res => res.data),
+    api.post('/projects', {
+      ...data,
+      image_url: data.imageUrl,
+      imageUrl: undefined
+    }).then(res => ({
+      ...res.data,
+      imageUrl: res.data.image_url
+    })),
   
   updateProject: (id: string, data: Partial<Project>): Promise<Project> =>
-    api.put(`/projects/${id}`, data).then(res => res.data),
+    api.put(`/projects/${id}`, {
+      ...data,
+      image_url: data.imageUrl,
+      imageUrl: undefined
+    }).then(res => ({
+      ...res.data,
+      imageUrl: res.data.image_url
+    })),
   
   deleteProject: (id: string): Promise<void> =>
     api.delete(`/projects/${id}`),

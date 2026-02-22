@@ -208,7 +208,7 @@ const AdminDashboard: React.FC = () => {
     experiences, addExperience, updateExperience, deleteExperience,
     education, addEducation, updateEducation, deleteEducation,
     projects, addProject, updateProject, deleteProject,
-    resetData, loading: dataLoading
+    resetData, loading: dataLoading, language, setLanguage
   } = useData();
 
   useEffect(() => {
@@ -336,6 +336,18 @@ const AdminDashboard: React.FC = () => {
         </nav>
 
         <div className="pt-6 border-t border-border space-y-2">
+           <div className="px-4 py-2">
+             <label className="block text-xs text-secondary mb-2">Language</label>
+             <select 
+               value={language}
+               onChange={(e) => setLanguage(e.target.value as 'en' | 'id' | 'ms')}
+               className="w-full bg-background border border-border rounded p-2 text-sm text-primary focus:border-primary outline-none"
+             >
+               <option value="en">English</option>
+               <option value="id">Bahasa Indonesia</option>
+               <option value="ms">Bahasa Melayu</option>
+             </select>
+           </div>
            <button onClick={resetData} className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-500/10 rounded">
              Reset to Defaults
            </button>
@@ -357,7 +369,14 @@ const AdminDashboard: React.FC = () => {
         )}
         
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold capitalize">{activeTab} Manager</h2>
+          <div>
+            <h2 className="text-3xl font-bold capitalize">{activeTab} Manager</h2>
+            <p className="text-sm text-secondary mt-1">
+              Editing: <span className="font-medium text-primary">{language === 'en' ? 'English' : language === 'id' ? 'Bahasa Indonesia' : 'Bahasa Melayu'}</span>
+              {' • '}
+              <span className="text-xs">Switch language in sidebar to manage different versions</span>
+            </p>
+          </div>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 text-sm">
               <input 
@@ -435,13 +454,16 @@ const AdminDashboard: React.FC = () => {
             loading={dataLoading}
             onDelete={(id) => handleSave(() => deleteExperience(id), 'Experience deleted')}
             onAdd={() => handleSave(
-              () => addExperience({ role: 'New Role', company: 'New Company', period: '2024', description: 'Description', technologies: [] }),
+              () => addExperience({ role: 'New Role', company: 'New Company', period: '2024', description: 'Description', technologies: [], language }),
               'Experience added'
             )}
             addButtonText="+ Add New Experience"
             getItemName={(exp) => `${exp.role} at ${exp.company}`}
             renderFields={(exp) => (
               <>
+                <div className="mb-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded inline-block">
+                  {exp.language || language}
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InputGroup label="Role" value={exp.role} onSave={(v: string) => handleSave(() => updateExperience(exp.id, { role: v }), 'Experience updated')} autoSave={saveMode === 'auto'} required />
                   <InputGroup label="Company" value={exp.company} onSave={(v: string) => handleSave(() => updateExperience(exp.id, { company: v }), 'Experience updated')} autoSave={saveMode === 'auto'} required />
@@ -461,13 +483,16 @@ const AdminDashboard: React.FC = () => {
             loading={dataLoading}
             onDelete={(id) => handleSave(() => deleteEducation(id), 'Education deleted')}
             onAdd={() => handleSave(
-              () => addEducation({ school: 'New University', degree: 'Bachelor', field: 'CS', year: '2024' }),
+              () => addEducation({ school: 'New University', degree: 'Bachelor', field: 'CS', year: '2024', language }),
               'Education added'
             )}
             addButtonText="+ Add New Education"
             getItemName={(edu) => `${edu.degree} from ${edu.school}`}
             renderFields={(edu) => (
               <>
+                <div className="mb-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded inline-block">
+                  {edu.language || language}
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InputGroup label="School" value={edu.school} onSave={(v: string) => handleSave(() => updateEducation(edu.id, { school: v }), 'Education updated')} autoSave={saveMode === 'auto'} required />
                   <InputGroup label="Degree" value={edu.degree} onSave={(v: string) => handleSave(() => updateEducation(edu.id, { degree: v }), 'Education updated')} autoSave={saveMode === 'auto'} required />
@@ -488,6 +513,9 @@ const AdminDashboard: React.FC = () => {
            ) : (
              projects.map((proj) => (
                <div key={proj.id} className="bg-surface p-6 rounded-xl border border-border relative group">
+                 <div className="absolute top-4 left-4 text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                   {proj.language || language}
+                 </div>
                  <button 
                    onClick={() => {
                      if (confirm(`Delete project "${proj.title}"?`)) {
@@ -550,7 +578,8 @@ const AdminDashboard: React.FC = () => {
                  title: 'New Project', 
                  description: 'Description', 
                  imageUrl: 'https://via.placeholder.com/600', 
-                 tags: [] 
+                 tags: [],
+                 language
                }),
                'Project added'
              )}

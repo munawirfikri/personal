@@ -91,12 +91,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Experience CRUD
   const addExperience = async (data: Omit<Experience, 'id'>) => {
     const newExp = await portfolioApi.createExperience({ ...data, language });
-    setExperiences(prev => [...prev, newExp]);
+    setExperiences(prev => [...prev, { ...newExp, id: newExp.id.toString() }]);
   };
 
   const updateExperience = async (id: string, data: Partial<Experience>) => {
     const updated = await portfolioApi.updateExperience(id, data);
-    setExperiences(prev => prev.map(exp => exp.id === id ? updated : exp));
+    setExperiences(prev => prev.map(exp => exp.id === id ? { ...updated, id: updated.id.toString() } : exp));
   };
 
   const deleteExperience = async (id: string) => {
@@ -107,12 +107,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Education CRUD
   const addEducation = async (data: Omit<EducationType, 'id'>) => {
     const newEdu = await portfolioApi.createEducation({ ...data, language });
-    setEducation(prev => [...prev, newEdu]);
+    setEducation(prev => [...prev, { ...newEdu, id: newEdu.id.toString() }]);
   };
 
   const updateEducation = async (id: string, data: Partial<EducationType>) => {
     const updated = await portfolioApi.updateEducation(id, data);
-    setEducation(prev => prev.map(edu => edu.id === id ? updated : edu));
+    setEducation(prev => prev.map(edu => edu.id === id ? { ...updated, id: updated.id.toString() } : edu));
   };
 
   const deleteEducation = async (id: string) => {
@@ -123,12 +123,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Project CRUD
   const addProject = async (data: Omit<Project, 'id'>) => {
     const newProj = await portfolioApi.createProject({ ...data, language });
-    setProjects(prev => [...prev, newProj]);
+    setProjects(prev => [...prev, { ...newProj, id: newProj.id.toString(), imageUrl: newProj.imageUrl || newProj.image_url }]);
   };
 
   const updateProject = async (id: string, data: Partial<Project>) => {
     const updated = await portfolioApi.updateProject(id, data);
-    setProjects(prev => prev.map(proj => proj.id === id ? updated : proj));
+    setProjects(prev => prev.map(proj => proj.id === id ? { ...updated, id: updated.id.toString(), imageUrl: updated.imageUrl || updated.image_url } : proj));
   };
 
   const deleteProject = async (id: string) => {
