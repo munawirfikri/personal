@@ -552,13 +552,12 @@ const AdminDashboard: React.FC = () => {
                  
                  <InputGroup 
                    label="Image URL (or upload above)" 
-                   value={proj.imageUrl} 
+                   value={proj.imageUrl || ''} 
                    onSave={(v: string) => handleSave(
                      () => updateProject(proj.id, { image_url: v }),
                      'Project updated'
                    )}
                    autoSave={saveMode === 'auto'}
-                   required
                  />
                  <ImagePreview url={proj.imageUrl} />
                  <InputGroup 

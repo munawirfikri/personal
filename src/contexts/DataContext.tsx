@@ -123,12 +123,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Project CRUD
   const addProject = async (data: Omit<Project, 'id'>) => {
     const newProj = await portfolioApi.createProject({ ...data, language });
-    setProjects(prev => [...prev, { ...newProj, id: newProj.id.toString(), imageUrl: newProj.imageUrl || newProj.image_url }]);
+    const normalized = { ...newProj, id: newProj.id.toString(), imageUrl: newProj.imageUrl || newProj.image_url };
+    setProjects(prev => [...prev, normalized]);
   };
 
   const updateProject = async (id: string, data: Partial<Project>) => {
     const updated = await portfolioApi.updateProject(id, data);
-    setProjects(prev => prev.map(proj => proj.id === id ? { ...updated, id: updated.id.toString(), imageUrl: updated.imageUrl || updated.image_url } : proj));
+    const normalized = { ...updated, id: updated.id.toString(), imageUrl: updated.imageUrl || updated.image_url };
+    setProjects(prev => prev.map(proj => proj.id === id ? normalized : proj));
   };
 
   const deleteProject = async (id: string) => {
