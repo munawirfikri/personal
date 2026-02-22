@@ -31,14 +31,29 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUploadSuccess, curre
       formData.append('image', file);
 
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api'}/images/upload`, {
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+      
+      console.log('Uploading to:', `${apiUrl}/images/upload`);
+      
+      const response = await fetch(`${apiUrl}/images/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
         },
         body: formData,
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error('Non-JSON response:', text.substring(0, 200));
+        throw new Error('Server returned non-JSON response. Check backend logs.');
+      }
+      
       const data = await response.json();
       
       if (!response.ok) {
