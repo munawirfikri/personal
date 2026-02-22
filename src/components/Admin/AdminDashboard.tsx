@@ -4,6 +4,7 @@ import { authApi } from '../../services/portfolioApi';
 import { useNotification } from '../../hooks/useNotification';
 import { EditorCard } from './EditorCard';
 import { InputGroupProps, TagsInputProps, ImagePreviewProps, SaveMode, TabType } from './types';
+import { ImageUpload } from './ImageUpload';
 
 // Debounce hook
 const useDebounce = (value: any, delay: number) => {
@@ -540,8 +541,17 @@ const AdminDashboard: React.FC = () => {
                    autoSave={saveMode === 'auto'}
                    required
                  />
+                 
+                 <ImageUpload
+                   currentUrl={proj.imageUrl}
+                   onUploadSuccess={(url) => handleSave(
+                     () => updateProject(proj.id, { image_url: url }),
+                     'Image uploaded'
+                   )}
+                 />
+                 
                  <InputGroup 
-                   label="Image URL" 
+                   label="Image URL (or upload above)" 
                    value={proj.imageUrl} 
                    onSave={(v: string) => handleSave(
                      () => updateProject(proj.id, { image_url: v }),
